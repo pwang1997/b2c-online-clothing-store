@@ -6,16 +6,15 @@
  *  4. ShoppingCart
  */
 
-import {useState} from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
 import MenuIcon from "@mui/icons-material/Menu";
-import {Link} from "@mui/material";
+import {Button, Link} from "@mui/material";
 import SearchBar from "./SearchBar/SearchBar";
-import UserItem from "./UserItem/UserItem";
+import UserLogin from "./UserItem/UserLogin";
+import Grid from "@mui/material/Unstable_Grid2";
 
 const links = [
     {name: "Home", url: "/"},
@@ -30,36 +29,34 @@ export default function Header() {
     return (
         <Box sx={{flexGrow: 1}}>
             <AppBar position="static">
-                <Toolbar>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="open drawer"
-                        sx={{mr: 2}}
-                    >
-                        <MenuIcon/>
-                    </IconButton>
-
-                    <Typography
-                        variant="h6"
-                        noWrap
-                        component="div"
-                        sx={{
-                            display: {xs: "none", sm: "block"},
-                        }}
-                    >
-                        Clothing Store
-                    </Typography>
-
-                    <SearchBar/>
-
-                    <UserItem/>
-                </Toolbar>
+                {/*<Toolbar>*/}
+                <Grid container>
+                    <Grid item xs={0.5} md={0.5}>
+                        <IconButton
+                            size="large"
+                            edge="start"
+                            color="inherit"
+                            aria-label="open drawer"
+                        >
+                            <MenuIcon/>
+                        </IconButton>
+                    </Grid>
+                    <Grid item xs={1} md={1} display={{xs: "none", md: "block"}}>
+                        <Link href="/" underline="none" color="white">
+                            <Button variant="secondary">Placeholder</Button>
+                        </Link>
+                    </Grid>
+                    <Grid item xs={8} sx={{flex: 1}}>
+                        <SearchBar/>
+                    </Grid>
+                    <Grid item xs={1}>
+                        <UserLogin/>
+                    </Grid>
+                </Grid>
+                {/*</Toolbar>*/}
             </AppBar>
 
 
-            {/* will be replaced with proper navbar */}
             <Toolbar
                 component="nav"
                 variant="dense"
