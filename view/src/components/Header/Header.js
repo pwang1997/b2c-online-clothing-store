@@ -13,10 +13,9 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import MenuIcon from "@mui/icons-material/Menu";
-import {Link, MenuItem} from "@mui/material";
+import {Link} from "@mui/material";
 import SearchBar from "./SearchBar/SearchBar";
 import UserItem from "./UserItem/UserItem";
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 const links = [
     {name: "Home", url: "/"},

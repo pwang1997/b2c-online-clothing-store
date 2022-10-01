@@ -4,12 +4,12 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import MoreIcon from "@mui/icons-material/MoreVert";
-import Box from "@mui/material/Box";
 
 const UserItem = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
+
+    // const [isLoggedIn, setIsLogedIn] = useState(false);
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -84,9 +84,44 @@ const UserItem = () => {
         </Menu>
     );
 
+    const IconBtnLogin = (props) => {
+        const isLoggedIn = props.isLoggedIn;
+        return(
+            <IconButton
+                size="medium"
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={menuId}
+                aria-haspopup="true"
+                onClick={handleProfileMenuOpen}
+                color="inherit"
+            >
+                {isLoggedIn ? "Logout" : "Login"}
+            </IconButton>
+        );
+    }
+
+    const IconBtnUser = (props) => {
+        const isLoggedIn = props.isLoggedIn;
+
+        return(
+            <IconButton
+                size="medium"
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={menuId}
+                aria-haspopup="true"
+                onClick={handleProfileMenuOpen}
+                color="inherit"
+            >
+                {isLoggedIn ? "Placeholder" : <AccountCircle />}
+            </IconButton>
+        );
+    }
+
     return (
         <div className="userIcon">
-            {renderMobileMenu}
+            {/* {renderMobileMenu}
             {renderMenu}
             <Box sx={{display: {xs: "none", md: "flex"}}}>
                 <IconButton
@@ -112,7 +147,18 @@ const UserItem = () => {
                 >
                     <MoreIcon/>
                 </IconButton>
-            </Box>
+            </Box> */}
+
+            {/*Todo: add mobile menu*/}
+            <div className="userItemMenu">
+                <IconBtnLogin isLoggedIn={true}/>
+                <IconBtnUser isLoggedIn={true} />
+            </div>
+
+            <div className="userItemMenu">
+                <IconBtnLogin isLoggedIn={false}/>
+                <IconBtnUser isLoggedIn={false} />
+            </div>
         </div>
     );
 };
