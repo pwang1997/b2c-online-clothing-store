@@ -1,0 +1,26 @@
+version: '3.7'
+
+services:
+
+  frontend:
+    container_name: frontend
+    build: 
+      context: ./view
+      dockerfile: Dockerfile
+    volumes:
+      - ./view/:/app
+      - /app/node_modules
+    ports:
+      - 3000:3000
+    command: yarn start --network-timeout 1000000
+
+  oauth:
+    container_name: oauth-service
+    build:
+      context: ./oauth
+      dockerfile: Dockerfile
+    volumes:
+      - ./oauth:/oauth
+      - /oauth/node_modules
+    ports:
+      - 3001:3001
