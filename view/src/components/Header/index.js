@@ -1,8 +1,8 @@
 /**
  * TODOs:
  *  1. NavBar
- *  2. SearchBar
- *  3. Login
+ *  2. Index
+ *  3. SignIn
  *  4. ShoppingCart
  */
 
@@ -12,8 +12,8 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import {Button, Link} from "@mui/material";
-import SearchBar from "./SearchBar/SearchBar";
-import UserLogin from "./UserItem/UserLogin";
+import SearchBar from "./SearchBar";
+import UserMenu from "./UserMenu";
 import Grid from "@mui/material/Unstable_Grid2";
 
 const links = [
@@ -47,10 +47,10 @@ export default function Header() {
                         </Link>
                     </Grid>
                     <Grid item xs={8} sx={{flex: 1}}>
-                        <SearchBar/>
+                        <SearchBar />
                     </Grid>
                     <Grid item xs={1}>
-                        <UserLogin/>
+                        <UserMenu/>
                     </Grid>
                 </Grid>
                 {/*</Toolbar>*/}
