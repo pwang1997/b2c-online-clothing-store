@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useContext} from 'react';
+import { useContext } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,10 +12,12 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import {createTheme, ThemeProvider} from '@mui/material/styles';
-import {FirebaseUserCollectionContext} from "../../context/ContextStorage";
-import {addDoc} from "firebase/firestore";
-import {useNavigate} from "react-router-dom";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { FirebaseUserCollectionContext } from "../../context/ContextStorage";
+import { addDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
+import { useCookies } from 'react-cookie';
+
 
 function Copyright(props) {
     return (
@@ -35,26 +37,37 @@ const theme = createTheme();
 export default function SignUp() {
     const userCollectionRef = useContext(FirebaseUserCollectionContext);
     const navigate = useNavigate();
+    const [cookies, setCookie] = useCookies(['user']);
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
+        const formData = new FormData(event.currentTarget);
 
-        const email = data.get('email');
-        const password = data.get('password');
+        const firstName = formData.get('firstName');
+        const lastName = formData.get('lastName');
+        const email = formData.get('email');
+        const password = formData.get('password');
 
-        if (!email || !password) {
-            alert("Email/ Password must not be empty!");
+        const data = {
+            username: `${firstName} ${lastName}`,
+            email: email,
+            password: password
+        }
+        if (!firstName || !lastName || !email || !password) {
+            alert("Inputs must not be empty!");
             return;
         }
 
         const signupUserWithEmailPassword = async () => {
-            await addDoc(userCollectionRef, {email: email, password: password});
+            await addDoc(userCollectionRef, data);
         };
 
-        // if success, save user email/password to cookie
         signupUserWithEmailPassword().then(() => {
-            // todo: save encrypted email and password to cookie
+            // if success, save user email/password to cookie
+            data.source = 'firebase'; // add attribute: source to distinguish user data from google-oauth or firebase
+
+            setCookie('user', JSON.stringify(data), { path: '/', expires: new Date(Date.now() + 30 * 60 * 1000) });
+
             navigate("/");
         }).catch((err) => {
             console.log(err);
@@ -64,7 +77,7 @@ export default function SignUp() {
     return (
         <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">
-                <CssBaseline/>
+                <CssBaseline />
                 <Box
                     sx={{
                         marginTop: 8,
@@ -73,13 +86,13 @@ export default function SignUp() {
                         alignItems: 'center',
                     }}
                 >
-                    <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
-                        <LockOutlinedIcon/>
+                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                        <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
                         Sign up
                     </Typography>
-                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{mt: 3}}>
+                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
                             <Grid item xs={12} sm={6}>
                                 <TextField
@@ -125,7 +138,7 @@ export default function SignUp() {
                             </Grid>
                             <Grid item xs={12}>
                                 <FormControlLabel
-                                    control={<Checkbox value="allowExtraEmails" color="primary"/>}
+                                    control={<Checkbox value="allowExtraEmails" color="primary" />}
                                     label="I want to receive inspiration, marketing promotions and updates via email."
                                 />
                             </Grid>
@@ -134,7 +147,7 @@ export default function SignUp() {
                             type="submit"
                             fullWidth
                             variant="contained"
-                            sx={{mt: 3, mb: 2}}
+                            sx={{ mt: 3, mb: 2 }}
                         >
                             Sign Up
                         </Button>
@@ -147,7 +160,7 @@ export default function SignUp() {
                         </Grid>
                     </Box>
                 </Box>
-                <Copyright sx={{mt: 5}}/>
+                <Copyright sx={{ mt: 5 }} />
             </Container>
         </ThemeProvider>
     );
