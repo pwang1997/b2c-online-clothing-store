@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useContext } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -66,7 +65,7 @@ export default function SignUp() {
             // if success, save user email/password to cookie
             data.source = 'firebase'; // add attribute: source to distinguish user data from google-oauth or firebase
 
-            setCookie('user', JSON.stringify(data), { path: '/', expires: new Date(Date.now() + 30 * 60 * 1000) });
+            setCookie('user', JSON.stringify(data), { path: '/', expires: new Date(Date.now() + 30 * 60 * 1000), httpOnly : false });
 
             navigate("/");
         }).catch((err) => {

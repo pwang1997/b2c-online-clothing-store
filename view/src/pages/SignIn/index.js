@@ -3,8 +3,8 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+// import FormControlLabel from '@mui/material/FormControlLabel';
+// import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -42,7 +42,7 @@ export default function SignIn() {
 
     const [email, setEmail] = useState(userCookie && userCookie.email ? userCookie.email : "");
     const [password, setPassword] = useState(userCookie && userCookie.password ? userCookie.password : "");
-    const [remember, setRemember] = useState(userCookie ? true : false);
+    // const [remember, setRemember] = useState(userCookie ? true : false);
 
     const loginWithEmailPassword = (event) => {
         event.preventDefault();
@@ -72,9 +72,9 @@ export default function SignIn() {
                 return;
             }
             // save to cookie for 30 minutes
-            if(remember) {
-                setCookie('user', JSON.stringify(res.docs[0].data()), { path: '/', expires: new Date(Date.now() + 30 * 60 * 1000)});
-            }
+            // if(remember) {
+            setCookie('user', JSON.stringify(res.docs[0].data()), { path: '/', expires: new Date(Date.now() + 30 * 60 * 1000), httpOnly: false });
+            // }
 
             navigate("/");
         }).catch((err) => {
@@ -135,12 +135,12 @@ export default function SignIn() {
                                 setPassword(e.target.value);
                             }}
                         />
-                        <FormControlLabel
+                        {/* <FormControlLabel
                             control={<Checkbox value="remember" color="primary" />}
                             label="Remember me"
                             onChange={(e) => { setRemember(!remember) }}
                             checked={remember}
-                        />
+                        /> */}
                         <Button
                             type="submit"
                             fullWidth
