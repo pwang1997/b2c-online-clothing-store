@@ -1,11 +1,3 @@
-/**
- * TODOs:
- *  1. NavBar
- *  2. Index
- *  3. SignIn
- *  4. ShoppingCart
- */
-
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
