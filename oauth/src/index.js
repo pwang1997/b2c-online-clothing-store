@@ -48,7 +48,7 @@ app.get('/api/v1/google/oauth/success', isLoggedIn, (req, res) => {
         source : 'google'
     }
     // save the data in cookie for 30 minutes.
-    res.cookie(`user`, JSON.stringify(data), { expires: new Date(Date.now() + 30 * 60 * 1000), httpOnly: true });
+    res.cookie(`user`, JSON.stringify(data), { expires: new Date(Date.now() + 30 * 60 * 1000), httpOnly: false });
     res.redirect('http://localhost:3000');
 });
 
