@@ -1,5 +1,4 @@
 import './App.css';
-import {useContext} from "react";
 import {Route, Routes} from "react-router-dom";
 
 // pages
@@ -12,13 +11,12 @@ import ProductDetail from "./pages/ProductDetail/ProductDetail";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 // context
-import {FirebaseUserCollectionContext} from "./context/ContextStorage";
+import {AppContextProvider} from "./context/AppContextProvider";
 
 function App() {
-    const userCollectionRef = useContext(FirebaseUserCollectionContext);
 
     return (
-        <FirebaseUserCollectionContext.Provider value={userCollectionRef}>
+        <AppContextProvider>
             <div className="App">
                 <Header />
                 <Routes>
@@ -31,7 +29,7 @@ function App() {
                     <Route path="/sign-up" element={<SignUp />} />
                 </Routes>
             </div>
-        </FirebaseUserCollectionContext.Provider>
+        </AppContextProvider>
     );
 }
 

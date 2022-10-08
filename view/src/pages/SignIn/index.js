@@ -12,7 +12,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { FirebaseUserCollectionContext } from "../../context/ContextStorage";
+import { useFirebaseUserCollection } from "../../context/FirebaseContext";
 import { useNavigate } from "react-router-dom";
 import { getDocs, query, where } from "firebase/firestore";
 import { useCookies } from 'react-cookie';
@@ -34,7 +34,7 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignIn() {
-    const userCollectionRef = useContext(FirebaseUserCollectionContext);
+    const userCollectionRef = useFirebaseUserCollection();
     const navigate = useNavigate();
 
     const [cookies, setCookie] = useCookies(['user']);
