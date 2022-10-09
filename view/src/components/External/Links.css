@@ -1,0 +1,7 @@
+.links {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    height: 300px; 
+    line-height: 760px;
+}

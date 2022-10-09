@@ -9,6 +9,7 @@ import ProductDetail from "./pages/ProductDetail/ProductDetail";
 import {useContext} from "react";
 
 import {FirebaseUserCollectionContext} from "./context/ContextStorage";
+import Links from './components/External/Links';
 
 function App() {
     const userCollectionRef = useContext(FirebaseUserCollectionContext);
@@ -24,6 +25,7 @@ function App() {
                     <Route path="/cart" element={<ShoppingCart/>}/>
                     <Route path="/checkout" element={<Checkout/>}/>
                 </Routes>
+                <Links/>
             </div>
         </FirebaseUserCollectionContext.Provider>
     );
