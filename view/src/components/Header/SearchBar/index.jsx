@@ -1,58 +1,47 @@
-import {alpha, styled} from "@mui/material/styles";
-
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const Search = styled('div')(({theme}) => ({
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    '&:hover': {
-        backgroundColor: alpha(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-        marginLeft: theme.spacing(3),
-        width: 'auto',
-    },
-}));
-
-const SearchIconWrapper = styled('div')(({theme}) => ({
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({theme}) => ({
-    color: 'inherit',
-    '& .MuiInputBase-input': {
-        padding: theme.spacing(1, 1, 1, 0),
-        // vertical padding + font size from searchIcon
-        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-        transition: theme.transitions.create('width'),
-        width: '100%',
-        [theme.breakpoints.up('md')]: {
-            width: '20ch',
-        },
-    },
-}));
+import Paper from '@mui/material/Paper';
+import IconButton from '@mui/material/IconButton';
 
 export default function SearchBar() {
+
+    const [searchQuery, setSearchQuery] = useState();
+    const navigate = useNavigate();
+
+    const searchProduct = () => {
+
+        navigate('/products',
+            {
+                state:
+                {
+                    category: searchQuery,
+                    productName: searchQuery,
+                    brand: searchQuery,
+                    company: searchQuery
+                },
+                replace: true
+            });
+        setSearchQuery("");
+    }
+
     return (
-        <Search>
-            <SearchIconWrapper>
-                <SearchIcon/>
-            </SearchIconWrapper>
-            <StyledInputBase
-                placeholder="Search…"
-                inputProps={{'aria-label': 'search'}}
+        <Paper
+            sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 'auto' }}
+        >
+            <InputBase
+                sx={{ ml: 1, flex: 1 }}
+                placeholder="Search Products"
+                inputProps={{ 'aria-label': 'search products' }}
+                onChange={(e) => { setSearchQuery(e.target.value) }}
+
             />
-        </Search>
+            <IconButton type="button" sx={{ p: '10px' }} aria-label="search"
+                onClick={() => { searchProduct() }}>
+                <SearchIcon />
+            </IconButton>
+        </Paper>
     );
 }
