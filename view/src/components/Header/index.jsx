@@ -7,6 +7,7 @@ import {Button, Link} from "@mui/material";
 import SearchBar from "./SearchBar";
 import UserMenu from "./UserMenu";
 import Grid from "@mui/material/Unstable_Grid2";
+import NavBar from "../NavBar";
 
 const links = [
     {name: "Home", url: "/"},
@@ -24,14 +25,15 @@ export default function Header() {
                 {/*<Toolbar>*/}
                 <Grid container>
                     <Grid item xs={0.5} md={0.5}>
-                        <IconButton
-                            size="large"
-                            edge="start"
-                            color="inherit"
-                            aria-label="open drawer"
-                        >
-                            <MenuIcon/>
-                        </IconButton>
+                        {/*<IconButton*/}
+                        {/*    size="large"*/}
+                        {/*    edge="start"*/}
+                        {/*    color="inherit"*/}
+                        {/*    aria-label="open drawer"*/}
+                        {/*>*/}
+                        {/*    <MenuIcon/>*/}
+                        {/*</IconButton>*/}
+                        <NavBar />
                     </Grid>
                     <Grid item xs={1} md={1} display={{xs: "none", md: "block"}}>
                         <Link href="/" underline="none" color="white">
