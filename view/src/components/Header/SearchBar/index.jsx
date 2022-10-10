@@ -12,15 +12,13 @@ export default function SearchBar() {
     const navigate = useNavigate();
 
     const searchProduct = () => {
-
-        navigate('/products',
+        ((!searchQuery) || (typeof searchQuery && searchQuery.trim().length === 0)) 
+        ? navigate('/') 
+        : navigate('/products',
             {
                 state:
                 {
-                    category: searchQuery,
-                    productName: searchQuery,
-                    brand: searchQuery,
-                    company: searchQuery
+                    productName: searchQuery
                 },
                 replace: true
             });

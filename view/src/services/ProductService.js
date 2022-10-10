@@ -1,4 +1,4 @@
-import {fetchAllProducts, fetchProductsByCategory} from "../apis/Products";
+import {fetchAllProducts, fetchProductByProductName, fetchProductsByCategory} from "../apis/Products";
 
 export const fetchProductsByCategoryService = (firebaseContext, categoryName, setProducts) => {
     let results = [];
@@ -9,14 +9,14 @@ export const fetchProductsByCategoryService = (firebaseContext, categoryName, se
     fetchProductsByCategory(firebaseContext, categoryName).then((res) => {
         res.docs.forEach((doc) => {
             const data = {
-                id: doc.id,
-                product: doc.data()
+                id : doc.id,
+                product : doc.data()
             }
             results.push(data);
-        });
+        })
     }).catch((err) => {
         console.error(err);
-    }).finally((res) => {
+    }).finally(() => {
         setProducts(results);
     });
 }
@@ -30,14 +30,36 @@ export const fetchAllProductsService = (firebaseContext, setProducts) => {
     fetchAllProducts(firebaseContext).then((res) => {
         res.docs.forEach((doc) => {
             const data = {
-                id: doc.id,
-                product: doc.data()
+                id : doc.id,
+                product : doc.data()
             }
             results.push(data);
-        });
+        })
     }).catch((err) => {
         console.error(err);
-    }).finally((res) => {
+    }).finally(() => {
+        console.log(results);
+        setProducts(results);
+    });
+}
+
+export const fetchProductsByProductNameService = (firebaseContext, productName, setProducts) => {
+    let results = [];
+    if(!firebaseContext) {
+        return results;
+    }
+
+    fetchProductByProductName(firebaseContext, productName).then((res) => {
+        res.docs.forEach((doc) => {
+            const data = {
+                id : doc.id,
+                product : doc.data()
+            }
+            results.push(data);
+        })
+    }).catch((err) => {
+        console.error(err);
+    }).finally(() => {
         setProducts(results);
     });
 }
