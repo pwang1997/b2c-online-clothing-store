@@ -4,7 +4,7 @@ import { getDocs, query, where } from "firebase/firestore";
 export const fetchProductsByCategory = async (firebaseContext, categoryName) => {
     const q = query(
         firebaseContext,
-        where("category", ">=", categoryName)
+        where("category", "==", categoryName)
     );
 
     return await getDocs(q);
