@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -14,9 +14,8 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useFirebaseUserCollection } from "../../context/FirebaseContext";
 import { useNavigate } from "react-router-dom";
-import { getDocs, query, where } from "firebase/firestore";
 import { useCookies } from 'react-cookie';
-
+import { validateLoginService } from '../../services/UserService';
 
 function Copyright(props) {
     return (
@@ -52,34 +51,10 @@ export default function SignIn() {
             return;
         }
 
-        const validateLoginWithFirebase = async () => {
-            const q = query(
-                userCollectionRef,
-                where("email", "==", email),
-                where("password", "==", password)
-            )
-            return await getDocs(q);
-        };
-
+        const data = { email, password };
         // if success, save user email/password to cookie
-        validateLoginWithFirebase().then((res) => {
-            // if user not found
-            if (res.docs.length === 0) {
-                alert("Failed to login. Please check your inputs.");
-                // reset inputs to default
-                setEmail("");
-                setPassword("");
-                return;
-            }
-            // save to cookie for 30 minutes
-            // if(remember) {
-            setCookie('user', JSON.stringify(res.docs[0].data()), { path: '/', expires: new Date(Date.now() + 30 * 60 * 1000), httpOnly: false });
-            // }
-
-            navigate("/");
-        }).catch((err) => {
-            console.log(err);
-        });
+        validateLoginService(userCollectionRef,
+            data, setEmail, setPassword, setCookie, navigate);
     };
 
     const loginWithGoogleOAuth = async (event) => {
