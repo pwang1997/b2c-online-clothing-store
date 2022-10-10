@@ -1,4 +1,3 @@
-import { useContext } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,10 +12,9 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useFirebaseUserCollection } from "../../context/FirebaseContext";
-import { addDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from 'react-cookie';
-
+import {signupUserService} from '../../services/UserService';
 
 function Copyright(props) {
     return (
@@ -47,30 +45,18 @@ export default function SignUp() {
         const email = formData.get('email');
         const password = formData.get('password');
 
-        const data = {
-            username: `${firstName} ${lastName}`,
-            email: email,
-            password: password
-        }
         if (!firstName || !lastName || !email || !password) {
             alert("Inputs must not be empty!");
             return;
         }
 
-        const signupUserWithEmailPassword = async () => {
-            await addDoc(userCollectionRef, data);
-        };
-
-        signupUserWithEmailPassword().then(() => {
-            // if success, save user email/password to cookie
-            data.source = 'firebase'; // add attribute: source to distinguish user data from google-oauth or firebase
-
-            setCookie('user', JSON.stringify(data), { path: '/', expires: new Date(Date.now() + 30 * 60 * 1000), httpOnly : false });
-
-            navigate("/");
-        }).catch((err) => {
-            console.log(err);
-        });
+        const data = {
+            username: `${firstName} ${lastName}`,
+            email: email,
+            password: password
+        }
+        
+        signupUserService(userCollectionRef, data, setCookie, navigate);
     };
 
     return (
