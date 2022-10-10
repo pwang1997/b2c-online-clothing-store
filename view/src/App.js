@@ -6,6 +6,7 @@ import Checkout from "./pages/Checkout/Checkout";
 import ShoppingCart from "./pages/ShoppingCart/ShoppingCart";
 import ProductGallery from "./pages/ProductGallery/ProductGallery";
 import ProductDetail from "./pages/ProductDetail/ProductDetail";
+import CheckoutSuccess from "./pages/Checkout/CheckoutSuccess";
 import {useContext} from "react";
 
 import {FirebaseUserCollectionContext} from "./context/ContextStorage";
@@ -23,6 +24,7 @@ function App() {
                     <Route path="/products/" element={<ProductGallery/>}/>
                     <Route path="/cart" element={<ShoppingCart/>}/>
                     <Route path="/checkout" element={<Checkout/>}/>
+                    <Route path="/checkoutSuccess" element={<CheckoutSuccess/>}/>
                 </Routes>
             </div>
         </FirebaseUserCollectionContext.Provider>

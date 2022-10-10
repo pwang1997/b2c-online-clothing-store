@@ -5,11 +5,12 @@ import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 
-export default function AddressForm() {
+const AddressForm = ({someText}) => {
     return (
         <React.Fragment>
             <Typography variant="h6" gutterBottom>
                 Shipping address
+                {someText}
             </Typography>
             <Grid container spacing={3}>
                 <Grid item xs={12} sm={6}>
@@ -107,3 +108,5 @@ export default function AddressForm() {
         </React.Fragment>
     );
 }
+
+export default AddressForm;
