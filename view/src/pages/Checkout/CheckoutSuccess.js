@@ -1,14 +1,10 @@
 import * as React from "react";
 import Typography from "@mui/material/Typography";
-import axios from "axios";
+import {useLocation} from "react-router-dom";
 
-const PaymentForm = () => {
-    const [orderId, setOrderId] = React.useState(null);
-
-    axios.get('/checkout').then((response) => {
-        console.log("CHEOUTSUCCESS GET", response.data);
-        // setOrderId(response.data.orderID);
-    });
+const CheckoutSuccess = () => {
+    const { state } = useLocation();
+    const { orderId } = state;
 
     return (
         <React.Fragment>
@@ -24,4 +20,4 @@ const PaymentForm = () => {
     );
 };
 
-export default PaymentForm;
+export default CheckoutSuccess;

@@ -9,6 +9,8 @@ import {PayPalButtons, PayPalScriptProvider} from "@paypal/react-paypal-js";
 import {useState} from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
+import CheckoutSuccess from "./CheckoutSuccess";
+
 
 const Checkout = () => {
     const products = [
@@ -40,18 +42,9 @@ const Checkout = () => {
 
     const navigate = useNavigate();
 
-
-    const navigateToPaymentSuccess = () => {
-        // navigate to /checkoutSuccess
-        navigate('/checkoutSuccess');
-    };
-    // axios.get('/checkout').then((response) => {
-    //     console.log("CHECKOUT GET", response.data);
-    //     // setOrderId(response.data.orderID);
-    // });
-
     const handleApprove = (orderId) => {
         setPaidFor(true);
+        navigate('/checkoutSuccess', {state: {orderId: orderId}, replace: true});
     }
 
     if (paidFor){
@@ -245,7 +238,7 @@ const Checkout = () => {
 
                     <Typography variant="h6" gutterBottom>
                         Payment method
-                        <PayPalScriptProvider options={{ "client-id": 'AUW9uJ2tm-lvA3BvifgMs9Q4gsXLjMrjdjEWnEhbX2m5aD3PNfG0U_4IysfOvZreTcVfi_m6unET-ced'}}>
+                        <PayPalScriptProvider options={{ "client-id": process.env.REACT_APP_PAYPAL_CLIENT_ID}}>
                             <PayPalButtons
                                 createOrder={(data, actions) => {
                                     return actions.order.create({
@@ -262,11 +255,6 @@ const Checkout = () => {
                                     const order = await actions.order.capture();
                                     console.log("Paypal Order:", order);
                                     handleApprove(data.orderID);
-                                    // paymentSuccess("data.orderID").then((res) => {
-                                    //     console.log(res.data)
-                                    // }).catch((error) => {
-                                    //     console.log(error)
-                                    // })
                                     await axios.post("http://localhost:5000/checkout", {
                                         orderId: data.orderID
                                     }).then((res) => {
@@ -290,13 +278,6 @@ const Checkout = () => {
         </div>
     )
 };
-
-// function paymentSuccess(orderId){
-//     return axios.post("http://localhost:5000",{
-//         orderId: orderId
-//     })
-// }
-
 export default Checkout;
 
 

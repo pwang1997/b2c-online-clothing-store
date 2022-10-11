@@ -9,13 +9,12 @@ app.use(bodyParser.json());
 app.use(cors())
 
 app.get('/', function (req, res) {
-    res.send('Hello World!');
+    res.send("PAYMENT GET Hello World!");
 });
- 
+
 app.post('/checkout', function (req, res) {
-    console.log(req.body.orderId);
-    // console.log(res.data.orderId);
-    res.send(req.body.orderId);
+    console.log("CHECKOUT POST", req.body.orderId);
+
 });
 
 const port = process.env.PORT || 5000;
