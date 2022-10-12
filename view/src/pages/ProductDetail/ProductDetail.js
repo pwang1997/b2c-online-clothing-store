@@ -11,6 +11,12 @@ const ProductDetail = () => {
             sx={{flex: 2}}>
             ProductDetail page
         </Typography>
+
+
+
+
+
+
     );
 };
 
