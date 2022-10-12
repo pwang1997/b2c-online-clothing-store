@@ -1,17 +1,14 @@
-import Typography from "@mui/material/Typography";
+import React from "react";
+import Slideshow from "../../components/SlideShow";
 
-const Storefront = () => {
+
+const StoreFront = () =>{
     return (
-        <Typography
-            component="h2"
-            variant="h5"
-            color="inherit"
-            align="center"
-            noWrap
-            sx={{flex: 2}}>
-            Storefront page
-        </Typography>
+        <>
+            <Slideshow />
+        </>
     );
-};
+}
 
-export default Storefront;
+
+export default StoreFront;
