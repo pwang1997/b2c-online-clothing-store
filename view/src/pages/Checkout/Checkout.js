@@ -5,12 +5,10 @@ import TextField from "@mui/material/TextField";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
-import {PayPalButtons, PayPalScriptProvider} from "@paypal/react-paypal-js";
+import {PayPalButtons} from "@paypal/react-paypal-js";
 import {useState} from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
-import CheckoutSuccess from "./CheckoutSuccess";
-
 
 const Checkout = () => {
     const products = [
@@ -54,93 +52,6 @@ const Checkout = () => {
     if (error){
         alert(error);
     }
-//     const data = "Payment sucess"
-//     const [activeStep, setActiveStep] = React.useState(0);
-//     const [paypalId, setpaypalId] = useState("null");
-//
-//     const handleNext = () => {
-//         setActiveStep(activeStep + 1);
-//     };
-//
-//     const handleBack = () => {
-//         setActiveStep(activeStep - 1);
-//     };
-//
-//     const getPaypalId = (paypalId) => {
-//         setpaypalId(paypalId);
-//     }
-//
-//     return (
-//         <ThemeProvider theme={theme}>
-//             {/*<AddressForm someText={data}/>*/}
-//             {/*<PaymentForm getPaypalId={getPaypalId} />*/}
-//             <CssBaseline />
-//             <AppBar
-//                 position="absolute"
-//                 color="default"
-//                 elevation={0}
-//                 sx={{
-//                     position: 'relative',
-//                     borderBottom: (t) => `1px solid ${t.palette.divider}`,
-//                 }}
-//             >
-//                 <Toolbar>
-//                     <Typography variant="h6" color="inherit" noWrap>
-//                         Company name
-//                     </Typography>
-//                 </Toolbar>
-//             </AppBar>
-//             <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
-//                 <Paper variant="outlined" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
-//                     <Typography component="h1" variant="h4" align="center">
-//                         Checkout
-//                     </Typography>
-//                     <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
-//                         {steps.map((label) => (
-//                             <Step key={label}>
-//                                 <StepLabel>{label}</StepLabel>
-//                             </Step>
-//                         ))}
-//                     </Stepper>
-//                     <React.Fragment>
-//                         <PaymentForm getPaypalId={getPaypalId} />
-//                         {paypalId}
-//                         {activeStep === steps.length ? (
-//                             <React.Fragment>
-//                                 <Typography variant="h5" gutterBottom>
-//                                     Thank you for your order.
-//                                 </Typography>
-//                                 <Typography variant="subtitle1">
-//                                     Your order number is {paypalId}. We have emailed your order
-//                                     confirmation, and will send you an update when your order has
-//                                     shipped.
-//                                 </Typography>
-//                             </React.Fragment>
-//                         ) : (
-//                             <React.Fragment>
-//                                 {getStepContent(activeStep)}
-//                                 <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-//                                     {activeStep !== 0 && (
-//                                         <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
-//                                             Back
-//                                         </Button>
-//                                     )}
-//
-//                                     <Button
-//                                         variant="contained"
-//                                         onClick={handleNext}
-//                                         sx={{ mt: 3, ml: 1 }}
-//                                     >
-//                                         {activeStep === steps.length - 1 ? 'Place order' : 'next'}
-//                                     </Button>
-//                                 </Box>
-//                             </React.Fragment>
-//                         )}
-//                     </React.Fragment>
-//                 </Paper>
-//             </Container>
-//         </ThemeProvider>
-//     );
 
     return (
         <div>
@@ -238,40 +149,38 @@ const Checkout = () => {
 
                     <Typography variant="h6" gutterBottom>
                         Payment method
-                        <PayPalScriptProvider options={{ "client-id": process.env.REACT_APP_PAYPAL_CLIENT_ID}}>
-                            <PayPalButtons
-                                createOrder={(data, actions) => {
-                                    return actions.order.create({
-                                        purchase_units: [
-                                            {
-                                                amount: {
-                                                    value: "0.99",
-                                                },
+                        <PayPalButtons
+                            createOrder={(data, actions) => {
+                                return actions.order.create({
+                                    purchase_units: [
+                                        {
+                                            amount: {
+                                                value: "0.99",
                                             },
-                                        ],
-                                    });
-                                }}
-                                onApprove={async (data, actions) => {
-                                    const order = await actions.order.capture();
-                                    console.log("Paypal Order:", order);
-                                    handleApprove(data.orderID);
-                                    await axios.post("http://localhost:5000/checkout", {
-                                        orderId: data.orderID
-                                    }).then((res) => {
-                                        console.log(res.data)
-                                    }).catch((error) => {
-                                        console.log(error)
-                                    })
-                                }}
-                                onCancel={()=>{
+                                        },
+                                    ],
+                                });
+                            }}
+                            onApprove={async (data, actions) => {
+                                const order = await actions.order.capture();
+                                console.log("Paypal Order:", order);
+                                handleApprove(data.orderID);
+                                await axios.post("http://localhost:5000/checkout", {
+                                    orderId: data.orderID
+                                }).then((res) => {
+                                    console.log(res.data)
+                                }).catch((error) => {
+                                    console.log(error)
+                                })
+                            }}
+                            onCancel={()=>{
 
-                                }}
-                                onError={(err) => {
-                                    setError(err);
-                                    console.error("PayPal Checkout Error: ", err);
-                                }}
-                            />
-                        </PayPalScriptProvider>
+                            }}
+                            onError={(err) => {
+                                setError(err);
+                                console.error("PayPal Checkout Error: ", err);
+                            }}
+                        />
                     </Typography>
                 </Grid>
             </Grid>

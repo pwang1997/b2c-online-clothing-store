@@ -12,8 +12,7 @@ const CheckoutSuccess = () => {
                 Thank you for your order.
             </Typography>
             <Typography variant="subtitle1">
-                Your order number is {orderId}. We have emailed your order
-                confirmation, and will send you an update when your order has
+                Your order number is {orderId}. We will send you an update when your order has
                 shipped.
             </Typography>
         </React.Fragment>
