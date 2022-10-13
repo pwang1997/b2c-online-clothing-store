@@ -3,12 +3,12 @@ import { Fade } from "react-slideshow-image";
 import "react-slideshow-image/dist/styles.css";
 import "./styles.css";
 
-const images =[
-    {id:"1", url:"hero-1.jpg"},
-    {id:"2", url:"hero-2.jpg"}
-]
-
 export default function Slideshow() {
+
+    const images =[
+        {id:"1", url:"hero-1.jpg"},
+        {id:"2", url:"hero-2.jpg"}
+    ]
 
     return (
         <div className="slide-container">
