@@ -1,57 +1,26 @@
 import { useState } from "react";
+import ProductCardsGrid from "./ProductCardsGrid";
+import Grid from '@mui/material/Grid';
 // import React, { useEffect, useRef } from 'react';
 
 export default function ProductCard() {
-
-    const [text, setText] = useState(false)
-    const styles = {
-    };
+    const cards=[{item:'Hoodie', picurl:'https://m.media-amazon.com/images/I/71hlZVUtDuL._AC_SX679_.jpg'},
+    {item:'Socks', picurl:'https://static.zara.net/photos///2022/I/0/1/p/3739/220/800/2/w/1126/3739220800_1_1_1.jpg?ts=1664799222795'},
+    {item:'T-shirt', picurl:'https://static.zara.net/photos///2022/I/0/1/p/1165/532/800/2/w/1126/1165532800_6_1_1.jpg?ts=1665411994848'},
+    {item:'Jeans', picurl:'https://static.zara.net/photos///2022/I/0/1/p/1934/243/800/2/w/1126/1934243800_2_4_1.jpg?ts=1663337327485'},
+    {item:'Coats', picurl:'https://static.zara.net/photos///2022/I/0/1/p/4432/816/800/2/w/1126/4432816800_6_1_1.jpg?ts=1665474248519'},
+    {item:'Boots', picurl:'https://static.zara.net/photos///2022/I/1/1/p/3110/010/040/2/w/668/3110010040_6_1_1.jpg?ts=1662104708269'},
+   
+]
 
     return (
-        <div className="col-lg-4 col-md-6 col-sm-6">
-            <div className="product__item sale">
-                <div className="product__item__pic set-bg" data-setbg="https://m.media-amazon.com/images/I/91F7MBF+p-S._AC_UX679_.jpg">
-                    <img src="https://m.media-amazon.com/images/I/71hlZVUtDuL._AC_SX679_.jpg" title="Hoodie" alt="Hoodie" height="260" />
-                    <span className="label">Sale</span>
-                    {/* <ul className="product__hover">
-                        <li><a href="#"><img src="img/icon/heart.png" alt="" /></a></li>
-                        <li><a href="#">
-                            <img src="/img/icon/compare.png" alt="" /> <span>Compare</span></a>
-                        </li>
-                        <li><a href="#">
-                            <img src="/img/icon/search.png" alt="" /></a></li>
-                    </ul> */}
-                </div>
-                <div className="product__item__text">
-                    <h6>Hoodie</h6>
-                    <div style={styles.hoodieImage}>
-                    </div>
-                    <br />
-                    <a href="#" className="add-cart"> Shopping Now</a>
-                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-                    <div className="rating">
-                        <i className="fa fa-star" style={styles.inputText}></i>
-                        <i className="fa fa-star" style={styles.inputText}></i>
-                        <i className="fa fa-star" style={styles.inputText}></i>
-                        <i className="fa fa-star" style={styles.inputText}></i>
-                        <i className="fa fa-star-o"></i>
-                    </div>
-                    <h5>10% OFF</h5>
-                    <div className="product__color__select">
-                        <label htmlFor="pc-28">
-                            <input type="radio" id="pc-28" />
-                        </label>
-                        <label className="active black" htmlFor="pc-29">
-                            <input type="radio" id="pc-29" />
-                        </label>
-                        <label className="grey" htmlFor="pc-30">
-                            <input type="radio" id="pc-30" />
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
+        <Grid container spacing={2}>
+        {cards.map((card)=>(
+            <Grid item xs={4}>
+                <ProductCardsGrid cardObj={card} />
+            </Grid>
+        ))}
+        </Grid>
+        
     );
 }
