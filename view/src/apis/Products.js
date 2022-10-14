@@ -1,4 +1,4 @@
-import {addDoc, getDocs, query, where} from "firebase/firestore";
+import {addDoc, getDocs, updateDoc, query, where} from "firebase/firestore";
 
 
 export const fetchProductsByCategory = async (firebaseContext, categoryName) => {
@@ -34,4 +34,8 @@ export const fetchNewReleaseProducts = async (firebaseContext) => { }
 
 export const addProduct = async(firebaseContext, product) => {
     return await addDoc(firebaseContext, product);
+}
+
+export const updateProduct = async(firebaseContext, product) => {
+    return await updateDoc(firebaseContext, product);
 }

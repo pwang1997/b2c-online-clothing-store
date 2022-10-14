@@ -1,4 +1,4 @@
-import {addProduct, fetchAllProducts, fetchProductByProductName, fetchProductsByCategory} from "../apis/Products";
+import {addProduct, updateProduct, fetchAllProducts, fetchProductByProductName, fetchProductsByCategory} from "../apis/Products";
 
 export const fetchProductsByCategoryService = (firebaseContext, categoryName, setProducts) => {
     let results = [];
@@ -74,5 +74,15 @@ export const addProductService = (firebaseContext, product) => {
     }).finally((res) => {
         console.log(res);
         console.log("arrived at finally");
+    })
+}
+
+export const updateProductService = (firebaseContext, product) => {
+    updateProduct(firebaseContext, product).then((res) => {
+        console.log(res);
+    }).catch((err) => {
+        console.error(err)
+    }).finally(() => {
+
     })
 }
