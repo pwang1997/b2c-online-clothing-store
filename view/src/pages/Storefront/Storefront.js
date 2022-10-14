@@ -4,17 +4,10 @@ import Overflow from "../../components/OverFlow";
 
 const StoreFront = () =>{
     return (
-
         <>
             <Slideshow />
             <Overflow />
-
         </>
-
-
-
     );
 }
-
-
 export default StoreFront;
