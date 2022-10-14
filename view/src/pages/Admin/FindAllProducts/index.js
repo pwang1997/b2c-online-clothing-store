@@ -3,7 +3,7 @@ import {Fragment, useEffect, useState} from "react";
 import {fetchAllProductsService} from "../../../services/ProductService";
 import {useFirebaseProductCollection} from "../../../context/FirebaseContext";
 import AdminProductCard from "../../../components/AdminProductCard";
-
+import Admin from "../../Admin";
 
 export default function FindAllProducts(props) {
 
@@ -17,6 +17,7 @@ export default function FindAllProducts(props) {
 
     return(
         <>
+        <Admin />
             {
                 // placeholder for displaying actual products
                 (products) &&

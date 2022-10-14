@@ -6,6 +6,7 @@ import Grid from "@mui/material/Grid";
 import {FormControl, Input, InputAdornment, InputLabel} from "@mui/material";
 import {useFirebaseProductCollection} from "../../../context/FirebaseContext";
 import {addProductService} from "../../../services/ProductService";
+import Admin from "../../Admin";
 
 export default function AddProduct(props) {
 
@@ -33,6 +34,7 @@ export default function AddProduct(props) {
     }
     return (
         <Box component="form">
+            <Admin />
             <Grid container
                   alignItems="center"
                   justifyContent="center"
