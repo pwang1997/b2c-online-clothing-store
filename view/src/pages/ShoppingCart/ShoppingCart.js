@@ -1,31 +1,15 @@
 import Typography from "@mui/material/Typography";
-import { useState, createContext } from 'react';
+import { useContext, Fragment } from 'react';
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import EmptyCart from "./EmptyCart";
 import * as React from "react";
 import CartItem from "./CartItem"
+import {CartContext} from "../../context/CartContext";
 
 const ShoppingCart = () => {
-    // [{"itemId":"caihbfw", "price":80,"amount":5}]
-    const [cart, setCart] = useState(
-        JSON.parse(localStorage.getItem('cart')) || []
-    );
-
-    const isInCart = (itemId) => cart.some((cartItem) => cartItem.id === itemId);
-
-    const totalItemPrice = (itemId) =>
-        setCart(cart.filter((cartItem) => cartItem.id !== itemId));
-        cart.reduce((acc, item) => (acc += item.amount), 0);
-
-    const totalCartPrice = () =>
-        cart.reduce((acc, item) => (acc += item.price * item.amount), 0);
-
-    const resetCart = () => {
-        setCart([]);
-        localStorage.setItem('cart', JSON.stringify([]));
-    };
+    const {totalCartPrice, cart, increaseItemAmountToCart, reduceItemAmountFromCart} = useContext(CartContext);
 
     return (
         <Typography
@@ -38,12 +22,14 @@ const ShoppingCart = () => {
             ShoppingCart page
             {cart.length > 0 ? (
                 <List disablePadding>
-                    {cart.map((item) => (
-                        <CartItem {...item}
-                            // itemId={item.itemId}
-                            // price={item.price}
-                            // amount={item.amount}
-                        />
+                    {cart.map((product) => (
+                        <ListItem key={product.itemId} sx={{ py: 1, px: 0 }}>
+                            <CartItem  itemId={product.itemId}
+                                       price={product.price}
+                                       amount={product.amount}
+                                       increaseItemAmountToCart={increaseItemAmountToCart}
+                                       reduceItemAmountFromCart={reduceItemAmountFromCart} />
+                        </ListItem>
                     ))}
 
                     <ListItem sx={{ py: 1, px: 0 }}>

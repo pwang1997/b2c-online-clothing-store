@@ -1,9 +1,9 @@
 import Typography from "@mui/material/Typography";
+import ProductCard from "../../components/ProductCard/ProductCard";
 import {Fragment, useEffect, useState} from "react";
 import {useFirebaseProductCollection} from "../../context/FirebaseContext";
 import {useLocation} from "react-router-dom";
 import {fetchAllProductsService, fetchProductsByProductNameService, fetchProductsByCategoryService} from "../../services/ProductService";
-
 
 const ProductGallery = () => {
     const productCollectionRef = useFirebaseProductCollection();
@@ -29,30 +29,22 @@ const ProductGallery = () => {
 
     return (
         <Fragment>
-            <Typography
-                component="h2"
-                variant="h5"
-                color="inherit"
-                align="center"
-                noWrap
-                sx={{flex: 2}}>
-            </Typography>
-
-            {
-                // placeholder for displaying actual products
-                (products) &&
-                products.map((row) => {
-                    console.log(row.product);
-                    return (
-                        <Fragment key={row.id}>
-                            <p>{row.product.productName}</p>
-                            <p>{row.product.price}</p>
-                        </Fragment>
-                    )
-                })
-            }
-
+            <ProductCard />
         </Fragment>
+
+            // {
+            //     // placeholder for displaying actual products
+            //     (products) &&
+            //     products.map((row) => {
+            //         console.log(row.product);
+            //         return (
+            //             <Fragment key={row.id}>
+            //                 <p>{row.product.productName}</p>
+            //                 <p>{row.product.price}</p>
+            //             </Fragment>
+            //         )
+            //     })
+            // }
     );
 };
 
