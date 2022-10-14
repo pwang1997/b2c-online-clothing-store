@@ -28,6 +28,8 @@ export default function FindAllProducts(props) {
                                 productName={row.product.productName}
                                 price={row.product.price}
                                 description={row.product.description}
+                                promotionStatus={row.product.promotion_status}
+                                promotionPrice={row.product.promotion_price}
                             />
                         </Fragment>
                     )

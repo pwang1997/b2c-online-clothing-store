@@ -8,12 +8,34 @@ import {
   deleteProductService,
   updateProductService,
 } from "../../services/ProductService";
+import _ from 'lodash';
+
 export default function AdminProductCard(props) {
-  const { id, productName, price, description } = props;
+  const { id, productName, price, description, promotionStatus, promotionPrice } = props;
+
+  let originalProduct = {
+    productName: productName,
+    description: description,
+    price: price,
+    promotion_status: promotionStatus,
+    promotion_price: promotionPrice
+  }
+
+  const promotionStatuses = [
+    { label: "TRUE", value: true },
+    { label: "FALSE", value: false }
+  ]
 
   const productNameRef = useRef(productName);
   const productDescriptionRef = useRef(description);
   const productDefaultPriceRef = useRef(price);
+  const promotionPriceRef = useRef(promotionPrice);
+
+  const [productPromotionStatus, setProductPromotionStatus] = useState(promotionStatus);
+
+  const handleChange = (event) => {
+    setProductPromotionStatus(event.target.value);
+  };
 
   const [isDeleted, setIsDeleted] = useState(false);
   const docRef = doc(db, "products", id);
@@ -24,15 +46,28 @@ export default function AdminProductCard(props) {
     const product = {
       productName: productNameRef.current.value,
       description: productDescriptionRef.current.value,
-      price: productDefaultPriceRef.current.value,
+      price: parseFloat(productDefaultPriceRef.current.value),
+      promotion_status: productPromotionStatus == "true",
+      promotion_price: parseFloat(promotionPriceRef.current.value)
     };
-
-    if (!product.productName && !product.price && !product.description) {
+    
+    // early termination when trying to update product with empty fields
+    if (!product.productName || !product.price || !product.description
+       || !product.promotion_price) {
       alert("Inputs must not be empty!");
       return;
     }
 
+    // early termination when no update is needed.
+    if (_.isEqual(originalProduct, product)) {
+      alert("No Update");
+      return;
+    }
+
+    // update and sync to latest product data
     updateProductService(docRef, product);
+    alert("Product Updated");
+    originalProduct = product;
   };
 
   const handleProductRemoval = (event) => {
@@ -83,6 +118,34 @@ export default function AdminProductCard(props) {
             variant="standard"
             inputRef={productDefaultPriceRef}
             defaultValue={price}
+          />
+        </Grid>
+
+        <Grid item>
+          <TextField
+            select
+            onChange={handleChange}
+            SelectProps={{
+              native: true,
+            }}
+            helperText="Promotion Status"
+            value={productPromotionStatus}
+          >
+            {promotionStatuses.map((status) => (
+              <option key={status.value} value={status.value}>
+                {status.label}
+              </option>
+            ))}
+          </TextField>
+        </Grid>
+
+        <Grid item>
+          <TextField
+            id="promotionPrice"
+            label="Promotion Price"
+            variant="standard"
+            inputRef={promotionPriceRef}
+            defaultValue={promotionPrice}
           />
         </Grid>
 
