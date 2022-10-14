@@ -6,7 +6,7 @@ import {useLocation} from "react-router-dom";
 export default function Products() {
 
     const products =[
-        {id:"1", url:"product-big-2.png"},
+        {id:"1", url:"/img/product/product-big-2.png"},
     ];
 
     const location = useLocation();
