@@ -1,17 +1,21 @@
-import Typography from "@mui/material/Typography";
+import { Grid } from "@mui/material";
+import ProductCard from "../../components/ProductCard/ProductCard";
+import { productList } from "../../mock/product";
 
 const ProductDetail = () => {
-    return (
-        <Typography
-            component="h2"
-            variant="h5"
-            color="inherit"
-            align="center"
-            noWrap
-            sx={{flex: 2}}>
-            ProductDetail page
-        </Typography>
-    );
+  return (
+    <>
+      <Grid container gap={2}>
+        {productList?.map((item) => {
+          return (
+            <Grid key={item.id}>
+              <ProductCard {...item} />
+            </Grid>
+          );
+        })}
+      </Grid>
+    </>
+  );
 };
 
 export default ProductDetail;
