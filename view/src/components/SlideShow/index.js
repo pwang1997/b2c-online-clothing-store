@@ -16,7 +16,7 @@ export default function Slideshow() {
                 {
                     images.map((image) => {
                         return(
-                            <div>
+                            <div key={image.id}>
                                 <img src={"img/hero/"+image.url} height="95%" width="95%" alt=""/>
                             </div>
                         );

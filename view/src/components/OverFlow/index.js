@@ -29,7 +29,7 @@ export default function Overflow() {
                     {
                         tops.map((top) => {
                             return (
-                                <div className="scroll">
+                                <div className="scroll" key={top.id}>
                                     <Link
                                         onClick={(event) => navigate('/product', {state: {id: top.id, src: "img/product/"+top.src}})}>
                                         <img src={"img/product/"+top.src} alt=""/>
@@ -45,7 +45,7 @@ export default function Overflow() {
                     {
                         shoes.map((shoe) => {
                             return (
-                                <div className="scroll">
+                                <div className="scroll" key={shoe.id}>
                                     <Link onClick={(event) => navigate('/product', {
                                         state: {
                                             id: shoe.id,
