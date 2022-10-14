@@ -14,25 +14,28 @@ import SignUp from "./pages/SignUp";
 // context
 import {AppContextProvider} from "./context/AppContextProvider";
 import {PayPalScriptProvider} from "@paypal/react-paypal-js";
+import {CartProvider} from "./context/CartContext";
 
 function App() {
 
     return (
         <AppContextProvider>
             <PayPalScriptProvider options={{ "client-id": process.env.REACT_APP_PAYPAL_CLIENT_ID}}>
-                <div className="App">
-                    <Header />
-                    <Routes>
-                        <Route path="/" element={<Storefront/>}/>
-                        <Route path="/product/" element={<ProductDetail/>}/>
-                        <Route path="/products/" element={<ProductGallery/>}/>
-                        <Route path="/cart" element={<ShoppingCart/>}/>
-                        <Route path="/checkout" element={<Checkout/>}/>
-                        <Route path="/checkoutSuccess" element={<CheckoutSuccess/>}/>
-                        <Route path="/sign-in" element={<SignIn />} />
-                        <Route path="/sign-up" element={<SignUp />} />
-                    </Routes>
-                </div>
+                <CartProvider>
+                    <div className="App">
+                        <Header />
+                        <Routes>
+                            <Route path="/" element={<Storefront/>}/>
+                            <Route path="/product/" element={<ProductDetail/>}/>
+                            <Route path="/products/" element={<ProductGallery/>}/>
+                            <Route path="/cart" element={<ShoppingCart/>}/>
+                            <Route path="/checkout" element={<Checkout/>}/>
+                            <Route path="/checkoutSuccess" element={<CheckoutSuccess/>}/>
+                            <Route path="/sign-in" element={<SignIn />} />
+                            <Route path="/sign-up" element={<SignUp />} />
+                        </Routes>
+                    </div>
+                </CartProvider>
             </PayPalScriptProvider>
         </AppContextProvider>
     );
