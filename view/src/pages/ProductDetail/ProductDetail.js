@@ -1,17 +1,24 @@
 import Typography from "@mui/material/Typography";
+import {useLocation} from "react-router-dom";
+import Slideshow from "../../components/SlideShow";
+import Overflow from "../../components/OverFlow";
+import React from "react";
+import Products from "../../components/ProductDetail"
 
 const ProductDetail = () => {
+
     return (
-        <Typography
-            component="h2"
-            variant="h5"
-            color="inherit"
-            align="center"
-            noWrap
-            sx={{flex: 2}}>
-            ProductDetail page
-        </Typography>
+
+        <>
+            <Products />
+
+        </>
+
     );
 };
+
+
+
+
 
 export default ProductDetail;

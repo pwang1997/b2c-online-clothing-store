@@ -1,0 +1,16 @@
+.flow-container {
+    overflow: auto;
+    white-space: nowrap;
+    padding: 5px 70px 5px 20px;
+    background: transparent;
+    height: 100%;
+    border-radius:15px;
+}
+
+div.scroll{
+    display:inline-block;
+}
+
+.scroll img{
+    margin-right:22px;
+}
