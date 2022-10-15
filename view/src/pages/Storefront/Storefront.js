@@ -1,17 +1,20 @@
-import Typography from "@mui/material/Typography";
+import { Grid } from "@mui/material";
+import PreCard from "../../components/Home";
+import { sortList } from "../../mock/sort";
 
 const Storefront = () => {
-    return (
-        <Typography
-            component="h2"
-            variant="h5"
-            color="inherit"
-            align="center"
-            noWrap
-            sx={{flex: 2}}>
-            Storefront page
-        </Typography>
-    );
+  return (
+    <Grid container gap={2} sx={{ justifyContent: "space-evenly" }}>
+      {sortList?.map((item) => {
+        return (
+          <Grid key={item.id}>
+            {/* <ProductCard {...item} /> */}
+            <PreCard {...item} />
+          </Grid>
+        );
+      })}
+    </Grid>
+  );
 };
 
 export default Storefront;
