@@ -1,12 +1,10 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
 
-const PreProduct = () => {
-  return (
-    <>
-      <Outlet />
-    </>
-  );
-};
+export default function ProductDetail(props) {
 
-export default PreProduct;
+    return (
+        <div>
+            placeholder
+        </div>
+    );
+}

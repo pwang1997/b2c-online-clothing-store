@@ -1,18 +1,19 @@
-version: '3.7'
+version: '3'
 
 services:
 
   frontend:
     container_name: frontend
+    restart: always
     build: 
       context: ./view
       dockerfile: Dockerfile
-    volumes:
-      - ./view/:/app
-      - /app/node_modules
+    # volumes:
+    #   - ./view/:/app
+    #   - /app/node_modules
     ports:
-      - 3000:3000
-    command: yarn start --network-timeout 1000000
+      - 3000:80
+    # command: yarn start --network-timeout 1000000
 
   oauth:
     container_name: oauth-service

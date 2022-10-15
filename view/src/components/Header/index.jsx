@@ -1,20 +1,11 @@
-/**
- * TODOs:
- *  1. NavBar
- *  2. SearchBar
- *  3. Login
- *  4. ShoppingCart
- */
-
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
 import {Button, Link} from "@mui/material";
-import SearchBar from "./SearchBar/SearchBar";
-import UserLogin from "./UserItem/UserLogin";
+import SearchBar from "./SearchBar";
+import UserMenu from "./UserMenu";
 import Grid from "@mui/material/Unstable_Grid2";
+import NavBar from "../NavBar";
 
 const links = [
     {name: "Home", url: "/"},
@@ -32,14 +23,7 @@ export default function Header() {
                 {/*<Toolbar>*/}
                 <Grid container>
                     <Grid item xs={0.5} md={0.5}>
-                        <IconButton
-                            size="large"
-                            edge="start"
-                            color="inherit"
-                            aria-label="open drawer"
-                        >
-                            <MenuIcon/>
-                        </IconButton>
+                        <NavBar />
                     </Grid>
                     <Grid item xs={1} md={1} display={{xs: "none", md: "block"}}>
                         <Link href="/" underline="none" color="white">
@@ -47,10 +31,10 @@ export default function Header() {
                         </Link>
                     </Grid>
                     <Grid item xs={8} sx={{flex: 1}}>
-                        <SearchBar/>
+                        <SearchBar />
                     </Grid>
                     <Grid item xs={1}>
-                        <UserLogin/>
+                        <UserMenu/>
                     </Grid>
                 </Grid>
                 {/*</Toolbar>*/}
@@ -72,7 +56,6 @@ export default function Header() {
                             href={link.url}
                             sx={{p: 1, flexShrink: 0}}
                         >
-                            {" "}
                             {link.name}
                         </Link>
                     );

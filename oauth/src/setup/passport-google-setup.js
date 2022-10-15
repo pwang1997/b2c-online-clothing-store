@@ -25,7 +25,7 @@ passport.deserializeUser(function (user, done) {
 passport.use(new GoogleStrategy({
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: `http://localhost:${process.env.SERVICE_PORT}/google/callback`
+        callbackURL: `http://localhost:${process.env.SERVICE_PORT}/api/v1/google/oauth/callback`
     },
     // function (accessToken, refreshToken, profile, cb) {
     //     User.findOrCreate({ googleId: profile.id }, function (err, user) {

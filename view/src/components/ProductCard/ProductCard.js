@@ -1,120 +1,100 @@
-//List detail page component
-
 import React from "react";
 import {
-  Card,
-  Box,
-  Typography,
-  Button,
-  CardContent,
-  CardActions,
-  CardMedia,
-  Rating,
+    Card, Box, Typography, Button, CardContent,
+    CardActions, CardMedia
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 
 export default function ProductCard(props) {
-  const {
-    id,
-    title,
-    price,
-    lastPrice,
-    orderPrice,
-    score,
-    describe,
-    url,
-    starscore,
-  } = props;
+    const {
+        id, productName, productDescription, url,
+        price, promotionPrice, promotionStatus = (id % 2 === 0)
+    } = props;
 
-  const navigate = useNavigate();
-  const card = (
-    <>
-      <CardContent>
-        <CardMedia
-          component={"img"}
-          height={"280"}
-          image={url}
-          alt="Clothing Img"
-        />
-        <Typography variant="h5" component="div">
-          {title}
-        </Typography>
-        <Typography
-          sx={{
-            display: "-webkit-box",
-            textOverflow: "ellipsis",
-            overflow: "hidden",
-            WebkitBoxOrient: "vertical",
-            WebkitLineClamp: 2,
-          }}
-          color="text.secondary"
-          gutterBottom
-        >
-          {describe}
-        </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-evenly",
-            alignItems: "center",
-          }}
-        >
-          <Rating name="read-only" defaultValue={starscore} readOnly />
-          <Box>{score}</Box>
-        </Box>
-        <Box
-          sx={{
-            margin: "8px 0",
-            display: "flex",
-            justifyContent: "space-evenly",
-            height: 28,
-            fontSize: 16,
-            alignItems: "center",
-          }}
-        >
-          <Box
-            sx={{
-              backgroundColor: "#f50057",
-              color: "#e1f5fe",
-              height: 28,
-              width: 74,
-              fontSize: 16,
-              lineHeight: "28px",
-            }}
-          >
-            20% off
-          </Box>
-          <Box sx={{ color: "#f50057" }}>Top Deal</Box>
-        </Box>
-        <Typography variant="body1">
-          ${price?.split(".")[0]}
-          <sup>{price?.split(".")[1]}</sup>
-        </Typography>
-        <Typography variant="body2">
-          Last Price: <del>${lastPrice}</del>
-        </Typography>
-        <Typography sx={{ display: "flex" }} color="text.secondary">
-          FREE shipping on order over ${orderPrice}.
-        </Typography>
-      </CardContent>
-      <CardActions sx={{ justifyContent: "center" }}>
-        <Button size="small" onFocus={() => toDetals(props)}>
-          Details
-        </Button>
-        <Button variant="contained">Add to Cart</Button>
-      </CardActions>
-    </>
-  );
+    const navigate = useNavigate();
+    const location = useLocation();
 
-  const toDetals = (data) => {
-    // todo: change navigate path
-    navigate(`${id}`, { state: { data } });
-    console.log(data);
-  };
+    const go2ProductDetail = () => {
+        const data = {
+            id: id,
+            productName: productName,
+            price: price,
+            promotionPrice: promotionPrice,
+            promotionStatus: promotionStatus,
+            productDescription: productDescription,
+            image: url
+        }
+        navigate(`/product/${id}`, {state: {data}, replace: true});
+    };
 
-  return (
-    <Box sx={{ width: 280 }}>
-      <Card variant="outlined">{card}</Card>
-    </Box>
-  );
+    return (
+        <Card variant="outlined" sx={{width: 280}}>
+            <CardContent>
+                <CardMedia
+                    component={"img"}
+                    height={"280"}
+                    image={url}
+                    alt={productName}
+                    onClick={go2ProductDetail}
+                />
+                <Typography variant="h5" component="div">
+                    {productName}
+                </Typography>
+                <Typography
+                    sx={{
+                        display: "-webkit-box",
+                        textOverflow: "ellipsis",
+                        overflow: "hidden",
+                        WebkitBoxOrient: "vertical",
+                        WebkitLineClamp: 2,
+                    }}
+                    color="text.secondary"
+                    gutterBottom
+                >
+                    {productDescription}
+                </Typography>
+
+                {
+                    (promotionStatus || location?.state?.promotionStatus) ?
+                        <Box
+                            sx={{
+                                margin: "8px 0",
+                                display: "inline-block",
+                                justifyContent: "space-evenly",
+                                height: 28,
+                                fontSize: 16,
+                                alignItems: "center",
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    backgroundColor: "#f50057",
+                                    color: "#e1f5fe",
+                                    width: 74,
+                                    lineHeight: "28px",
+                                }}
+                            >
+                                20% off
+                            </Box>
+                            <Typography variant="body1">
+                                ${promotionPrice?.split(".")[0]}
+                                <sup>{promotionPrice?.split(".")[1]}</sup>
+                            </Typography>
+                            <Typography variant="body1">
+                                Was : <del>${price}</del>
+                            </Typography>
+                        </Box> :
+                        <Typography variant="body1">
+                            ${price}
+                        </Typography>
+                }
+            </CardContent>
+            <CardActions sx={{justifyContent: "center"}}>
+                <Button size="small" onClick={go2ProductDetail}>
+                    Details
+                </Button>
+                <Button size="small" variant="contained">Add to Cart</Button>
+            </CardActions>
+        </Card>
+    );
 }
