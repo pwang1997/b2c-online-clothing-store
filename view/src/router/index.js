@@ -5,9 +5,9 @@ import Checkout from "../pages/Checkout/Checkout";
 import ShoppingCart from "../pages/ShoppingCart/ShoppingCart";
 import ProductGallery from "../pages/ProductGallery/ProductGallery";
 import PreProduct from "../pages/ProductDetail";
-import PrdDetail from "../components/ProDetail";
-import Layout from "../Layout";
-import List from "../pages/ProductDetail/component/List";
+import PrdDetail from "../pages/ProductDetail/ProductDetail1";
+//import Layout from "../Layout";
+import List from "../components/SeasonalProduct";
 
 function RouterProps() {
   return (

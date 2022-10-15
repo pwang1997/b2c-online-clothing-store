@@ -1,5 +1,5 @@
 import { Grid } from "@mui/material";
-import PreCard from "../../components/Home";
+import SeasonalProductCard from "../../components/SeasonalProductCard";
 import { sortList } from "../../mock/sort";
 
 const Storefront = () => {
@@ -9,7 +9,7 @@ const Storefront = () => {
         return (
           <Grid key={item.id}>
             {/* <ProductCard {...item} /> */}
-            <PreCard {...item} />
+            <SeasonalProductCard {...item} />
           </Grid>
         );
       })}

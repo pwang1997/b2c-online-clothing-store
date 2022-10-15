@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Grid } from "@mui/material";
-import ProductCard from "../../../components/ProductCard/ProductCard";
+import ProductCard from "../ProductCard/ProductCard";
 import { useLocation } from "react-router-dom";
 import {
   autumnList,
   springList,
   summerList,
   winterList,
-} from "../../../mock/product";
+} from "../../mock/product";
 
 const List = () => {
   const location = useLocation();

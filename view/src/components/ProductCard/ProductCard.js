@@ -107,6 +107,7 @@ export default function ProductCard(props) {
   );
 
   const toDetals = (data) => {
+    // todo: change navigate path
     navigate(`${id}`, { state: { data } });
     console.log(data);
   };

@@ -8,12 +8,14 @@ import CardMedia from "@mui/material/CardMedia";
 import { Button, CardActions, CardHeader } from "@mui/material";
 // import cloth from "../../static/assets/productImg/1.jpg";
 
-export default function PreCard(props) {
+// todo: change to feature product card
+export default function SeasonalProductCard(props) {
   const { title, name, url } = props;
-  const history = useNavigate();
+  const navigate = useNavigate();
   const getDetals = (name) => {
     console.log(name);
-    history("/product", { state: { name } });
+    // todo: change state with firebase 
+    navigate("/products", { state: { name } });
   };
   return (
     <Card sx={{ width: 345 }}>
