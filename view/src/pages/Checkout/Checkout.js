@@ -6,7 +6,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import {PayPalButtons} from "@paypal/react-paypal-js";
-import {useState} from "react";
+import {useContext, useState} from "react";
 import axios from "axios";
 import {useLocation, useNavigate} from "react-router-dom";
 import Paper from "@mui/material/Paper";
@@ -16,6 +16,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import Box from "@mui/material/Box";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import {CartContext} from "../../context/CartContext";
 
 const Checkout = () => {
     const { state } = useLocation();
@@ -24,6 +25,8 @@ const Checkout = () => {
 
     const [paidFor, setPaidFor] = useState(false);
     const [error, setError] = useState(null);
+
+    const {resetCart} = useContext(CartContext)
 
     const navigate = useNavigate();
 
@@ -37,6 +40,7 @@ const Checkout = () => {
 
     const handleApprove = (orderId) => {
         setPaidFor(true);
+        resetCart()
         navigate('/checkoutSuccess', {state: {orderId: orderId}, replace: true});
     }
 
