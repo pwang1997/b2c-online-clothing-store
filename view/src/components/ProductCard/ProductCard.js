@@ -1,57 +1,100 @@
-import { useState } from "react";
-// import React, { useEffect, useRef } from 'react';
+import React from "react";
+import {
+    Card, Box, Typography, Button, CardContent,
+    CardActions, CardMedia
+} from "@mui/material";
+import {useLocation, useNavigate} from "react-router-dom";
 
-export default function ProductCard() {
+export default function ProductCard(props) {
+    const {
+        id, productName, productDescription, url,
+        price, promotionPrice, promotionStatus = (id % 2 === 0)
+    } = props;
 
-    const [text, setText] = useState(false)
-    const styles = {
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const go2ProductDetail = () => {
+        const data = {
+            id: id,
+            productName: productName,
+            price: price,
+            promotionPrice: promotionPrice,
+            promotionStatus: promotionStatus,
+            productDescription: productDescription,
+            image: url
+        }
+        navigate(`/product/${id}`, {state: {data}, replace: true});
     };
 
     return (
-        <div className="col-lg-4 col-md-6 col-sm-6">
-            <div className="product__item sale">
-                <div className="product__item__pic set-bg" data-setbg="https://m.media-amazon.com/images/I/91F7MBF+p-S._AC_UX679_.jpg">
-                    <img src="https://m.media-amazon.com/images/I/71hlZVUtDuL._AC_SX679_.jpg" title="Hoodie" alt="Hoodie" height="260" />
-                    <span className="label">Sale</span>
-                    {/* <ul className="product__hover">
-                        <li><a href="#"><img src="img/icon/heart.png" alt="" /></a></li>
-                        <li><a href="#">
-                            <img src="/img/icon/compare.png" alt="" /> <span>Compare</span></a>
-                        </li>
-                        <li><a href="#">
-                            <img src="/img/icon/search.png" alt="" /></a></li>
-                    </ul> */}
-                </div>
-                <div className="product__item__text">
-                    <h6>Hoodie</h6>
-                    <div style={styles.hoodieImage}>
-                    </div>
-                    <br />
-                    <a href="#" className="add-cart"> Shopping Now</a>
-                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-                    <div className="rating">
-                        <i className="fa fa-star" style={styles.inputText}></i>
-                        <i className="fa fa-star" style={styles.inputText}></i>
-                        <i className="fa fa-star" style={styles.inputText}></i>
-                        <i className="fa fa-star" style={styles.inputText}></i>
-                        <i className="fa fa-star-o"></i>
-                    </div>
-                    <h5>10% OFF</h5>
-                    <div className="product__color__select">
-                        <label htmlFor="pc-28">
-                            <input type="radio" id="pc-28" />
-                        </label>
-                        <label className="active black" htmlFor="pc-29">
-                            <input type="radio" id="pc-29" />
-                        </label>
-                        <label className="grey" htmlFor="pc-30">
-                            <input type="radio" id="pc-30" />
-                        </label>
-                    </div>
-                </div>
-            </div>
+        <Card variant="outlined" sx={{width: 280}}>
+            <CardContent>
+                <CardMedia
+                    component={"img"}
+                    height={"280"}
+                    image={url}
+                    alt={productName}
+                    onClick={go2ProductDetail}
+                />
+                <Typography variant="h5" component="div">
+                    {productName}
+                </Typography>
+                <Typography
+                    sx={{
+                        display: "-webkit-box",
+                        textOverflow: "ellipsis",
+                        overflow: "hidden",
+                        WebkitBoxOrient: "vertical",
+                        WebkitLineClamp: 2,
+                    }}
+                    color="text.secondary"
+                    gutterBottom
+                >
+                    {productDescription}
+                </Typography>
 
-        </div>
-
+                {
+                    (promotionStatus || location?.state?.promotionStatus) ?
+                        <Box
+                            sx={{
+                                margin: "8px 0",
+                                display: "inline-block",
+                                justifyContent: "space-evenly",
+                                height: 28,
+                                fontSize: 16,
+                                alignItems: "center",
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    backgroundColor: "#f50057",
+                                    color: "#e1f5fe",
+                                    width: 74,
+                                    lineHeight: "28px",
+                                }}
+                            >
+                                20% off
+                            </Box>
+                            <Typography variant="body1">
+                                ${promotionPrice?.split(".")[0]}
+                                <sup>{promotionPrice?.split(".")[1]}</sup>
+                            </Typography>
+                            <Typography variant="body1">
+                                Was : <del>${price}</del>
+                            </Typography>
+                        </Box> :
+                        <Typography variant="body1">
+                            ${price}
+                        </Typography>
+                }
+            </CardContent>
+            <CardActions sx={{justifyContent: "center"}}>
+                <Button size="small" onClick={go2ProductDetail}>
+                    Details
+                </Button>
+                <Button size="small" variant="contained">Add to Cart</Button>
+            </CardActions>
+        </Card>
     );
 }

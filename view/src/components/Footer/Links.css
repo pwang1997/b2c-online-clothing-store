@@ -1,0 +1,15 @@
+.links {
+    height: 54px;
+    width: 100%;
+    line-height: 54px;
+    position: fixed;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    background-color: #efebe9;
+}
+.container{
+    display: flex;
+    width: 800px;
+    justify-content: space-around;
+}
