@@ -172,7 +172,7 @@ const Checkout = () => {
                                             purchase_units: [
                                                 {
                                                     amount: {
-                                                        value: "0.99",
+                                                        value: totalCartPrice,
                                                     },
                                                 },
                                             ],
