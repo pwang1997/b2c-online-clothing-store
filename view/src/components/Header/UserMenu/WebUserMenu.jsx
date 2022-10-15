@@ -1,5 +1,5 @@
 import {Menu} from "@mui/material";
-import {useState, Fragment} from "react";
+import {useState, Fragment, useContext} from "react";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import {AccountCircle} from "@mui/icons-material";
@@ -7,6 +7,7 @@ import Avatar from "@mui/material/Avatar";
 import Badge from "@mui/material/Badge";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import {MenuItemOrderHistory, MenuItemProfile, MenuItemSignIn, MenuItemSignOut, MenuItemSignUp} from "./MenuItems";
+import {CartContext} from "../../../context/CartContext";
 
 function stringAvatar(name) {
     return {
@@ -22,6 +23,7 @@ function stringAvatar(name) {
 
 export default function WebUserMenu(props) {
     const {userCookie, navigate, removeCookie} = props;
+    const {amountOfItemsInCart} = useContext(CartContext);
 
     const [anchorEl, setAnchorEl] = useState(null);
     const isMenuOpen = Boolean(anchorEl);
@@ -64,8 +66,9 @@ export default function WebUserMenu(props) {
                         aria-haspopup="true"
                         color="inherit"
                     >
-                        <Badge badgeContent={5} color="error">
-                            <ShoppingCartIcon onClick={() => { props.navigate("/cart") }} />
+                        <Badge badgeContent={amountOfItemsInCart()} color="error">
+                            <ShoppingCartIcon onClick={() => {
+                                props.navigate("/cart") }} />
                         </Badge>
                     </IconButton>
                 }
