@@ -19,6 +19,13 @@ export default function Settings(props) {
                     mb: '10px'
                 }}
             />
+            <ListItem disablePadding>
+                <ListItemButton onClick={() => {
+                    navigate("/");
+                }}>
+                    <ListItemText primary={"Home"}/>
+                </ListItemButton>
+            </ListItem>
 
             <ListItem disablePadding>
                 <ListItemButton onClick={() => {

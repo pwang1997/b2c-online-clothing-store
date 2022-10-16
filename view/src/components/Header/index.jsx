@@ -9,7 +9,7 @@ import NavBar from "../NavBar";
 export default function Header() {
 
     return (
-        <Box sx={{flexGrow: 1, mb : 2}}>
+        <Box sx={{flexGrow: 1, mb : 2, width: "auto"}}>
             <AppBar position="static">
                 {/*<Toolbar>*/}
                 <Grid container>

@@ -27,24 +27,36 @@ const Index = () => {
     }, []);
 
     return (
-        <>
-            <Slideshow/>
+            <Grid container>
+                <Grid item xs={12}>
+                    <Slideshow/>
+                </Grid>
+                {/*<Grid container gap={2} sx={{justifyContent: "space-evenly"}}>*/}
+                {/*    {sortList?.map((item) => {*/}
+                {/*        return (*/}
+                {/*            <Grid key={item.id}>*/}
+                {/*                <SeasonalProductCard {...item} />*/}
+                {/*            </Grid>*/}
+                {/*        );*/}
+                {/*    })}*/}
+                {/*</Grid>*/}
 
-            <Grid container gap={2} sx={{justifyContent: "space-evenly"}}>
-                {sortList?.map((item) => {
-                    return (
-                        <Grid key={item.id}>
-                            <SeasonalProductCard {...item} />
-                        </Grid>
-                    );
-                })}
+                <Grid item xs={12}>
+                    <Overflow title={"Promotions"} products={promotedProducts} navigate={navigate}/>
+                </Grid>
+
+                <Grid item xs={12}>
+                    <Overflow title={"Fall season sales"} products={[...autumnList]} navigate={navigate}/>
+                </Grid>
+
+                <Grid item xs={12}>
+                    <Overflow title={"More items to consider"} products={[...winterList]} navigate={navigate}/>
+                </Grid>
+
+                <Grid item xs={12}>
+                    <Overflow title={"Selected for you"} products={[...springList]} navigate={navigate}/>
+                </Grid>
             </Grid>
-
-            <Overflow title={"Promotions"} products={promotedProducts} navigate={navigate}/>
-            <Overflow title={"Fall season sales"} products={[...autumnList]} navigate={navigate}/>
-            <Overflow title={"More items to consider"} products={[...winterList]} navigate={navigate}/>
-            <Overflow title={"Selected for you"} products={[...springList]} navigate={navigate}/>
-        </>
     );
 }
 export default Index;
