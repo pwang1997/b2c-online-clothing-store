@@ -1,6 +1,6 @@
 .flow-container {
-    /*overflow: auto;*/
-    overflow-x: auto;
+    overflow: auto;
+    /*overflow-x: auto;*/
     white-space: nowrap;
     padding: 5px 70px 5px 20px;
     background: transparent;
@@ -14,4 +14,6 @@ div.scroll{
 
 .scroll img{
     margin-right:22px;
+    max-height: 200px;
+    max-width: 200px;
 }
