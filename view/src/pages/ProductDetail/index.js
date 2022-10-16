@@ -1,14 +1,25 @@
 import {Box, Typography, Divider, Button} from "@mui/material";
 import React, {useContext, useState} from "react";
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {CartContext} from "../../context/CartContext";
+import {useCookies} from "react-cookie";
 
 export default function ProductDetail() {
     const location = useLocation();
+    const navigate = useNavigate();
+    const [cookie, setCookie] = useCookies(['user']);
+    const userCookie = cookie['user'];
+
     const [data, setData] = useState(location.state);
     const cartContext = useContext(CartContext);
 
     const handleAddProduct2Card = () => {
+        // if user not login, redirect to login page
+        if(!userCookie) {
+            navigate("/sign-in");
+            return;
+        }
+
         cartContext.addItemToCart(data);
     }
 
