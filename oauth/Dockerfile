@@ -1,6 +1,6 @@
 FROM node:14.17-alpine
 WORKDIR /oauth
-COPY ["package.json", "yarn.lock", "./"]
+COPY ["package.json", "./"]
 RUN ["yarn"]
 COPY [".", "./"]
 EXPOSE 3001
