@@ -22,19 +22,19 @@ export const CartProvider = ({ children }) => {
         }
     };
 
-    const removeItemFromCart = (itemId) => {
-        setCart(cart.filter((cartItem) => cartItem.itemId !== itemId));
+    const removeItemFromCart = (id) => {
+        setCart(cart.filter((cartItem) => cartItem.id !== id));
         localStorage.setItem(
             'cart',
-            JSON.stringify(cart.filter((cartItem) => cartItem.itemId !== itemId))
+            JSON.stringify(cart.filter((cartItem) => cartItem.id !== id))
         );
     };
 
-    const isInCart = (itemId) => cart.some((cartItem) => cartItem.itemId === itemId);
+    const isInCart = (id) => cart.some((cartItem) => cartItem.id === id);
 
     const amountOfItemsInCart = () => cart.reduce((acc, item) => (acc += item.amount), 0);
 
-    const amountOfItems = (itemId) => cart.filter((cartItem) => cartItem.itemId === itemId)[0].amount
+    const amountOfItems = (id) => cart.filter((cartItem) => cartItem.id === id)[0].amount
 
     const totalCartPrice = () =>
         cart.reduce((acc, item) => (acc += item.price * item.amount), 0);
@@ -44,11 +44,11 @@ export const CartProvider = ({ children }) => {
         localStorage.setItem('cart', JSON.stringify([]));
     };
 
-    const increaseItemAmountToCart = (itemId) => {
+    const increaseItemAmountToCart = (id) => {
         const cartItems = JSON.parse(localStorage.getItem('cart'))
-        // const cartItem = cartItems.filter((cartItem) => cartItem.itemId === itemId.toString())
+        // const cartItem = cartItems.filter((cartItem) => cartItem.id === id.toString())
         let query = cartItems.map(item => {
-            if (item.itemId === itemId){
+            if (item.id === id){
                 item.amount = item.amount+1
             }
             return item;
@@ -57,11 +57,12 @@ export const CartProvider = ({ children }) => {
         setCart(JSON.parse(localStorage.getItem('cart')));
     };
 
-    const reduceItemAmountFromCart = (itemId) => {
-        if(amountOfItems(itemId) > 1){
+    const reduceItemAmountFromCart = (id) => {
+        if(amountOfItems(id) > 1){
             const cartItems = JSON.parse(localStorage.getItem('cart'))
             let query = cartItems.map(item => {
-                if (item.itemId === itemId){
+                console.log(item);
+                if (item.id === id){
                     item.amount = item.amount-1
                 }
                 return item;
@@ -69,10 +70,10 @@ export const CartProvider = ({ children }) => {
             localStorage.setItem('cart', JSON.stringify(query));
             setCart(JSON.parse(localStorage.getItem('cart')));
         }else{
-            removeItemFromCart(itemId)
+            removeItemFromCart(id)
         }
     };
-    // [{"itemId":"1","price":90,"amount":24}, {"itemId":"2","price":90,"amount":23}]
+    // [{"id":"1","price":90,"amount":24}, {"id":"2","price":90,"amount":23}]
     return (
         <CartContext.Provider
             value={{
