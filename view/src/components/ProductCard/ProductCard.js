@@ -9,7 +9,7 @@ import {useCookies} from "react-cookie";
 
 export default function ProductCard(props) {
     const {
-        id, productName, productDescription, url,
+        id, productName, productDescription, image,
         price, promotionPrice, promotionStatus = (id % 2 === 0)
     } = props;
 
@@ -26,7 +26,7 @@ export default function ProductCard(props) {
         promotionPrice: promotionPrice,
         promotionStatus: promotionStatus,
         productDescription: productDescription,
-        image: url
+        image: image
     }
 
     const go2ProductDetail = () => {
@@ -49,7 +49,7 @@ export default function ProductCard(props) {
                 <CardMedia
                     component={"img"}
                     height={"280"}
-                    image={url}
+                    image={image}
                     alt={productName}
                     onClick={go2ProductDetail}
                 />

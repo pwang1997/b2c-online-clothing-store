@@ -17,7 +17,7 @@ export default function ProductGallery () {
     autumn: autumnList,
     winter: winterList,
   };
-  const [Data, setData] = useState([
+  const [Data, setData] = useState((location?.state) ? location.state : [
     ...springList,
     ...summerList,
     ...winterList,

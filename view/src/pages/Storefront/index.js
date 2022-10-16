@@ -2,7 +2,7 @@ import React from "react";
 
 import {Grid} from "@mui/material";
 import {useNavigate} from "react-router-dom";
-
+import {autumnList, springList, summerList, winterList} from "../../mock/product";
 import {sortList} from "../../mock/sort";
 import Slideshow from "../../components/SlideShow";
 import Overflow from "../../components/OverFlow";
@@ -11,34 +11,21 @@ import SeasonalProductCard from "../../components/SeasonalProductCard";
 const Index = () => {
     const navigate = useNavigate();
 
-    const tops = [
-        {id: "1", src: "product-8.jpg"},
-        {id: "2", src: "product-8.jpg"},
-        {id: "3", src: "product-8.jpg"},
-        {id: "4", src: "product-8.jpg"},
-        {id: "5", src: "product-8.jpg"},
-        {id: "6", src: "product-8.jpg"},
-        {id: "7", src: "product-8.jpg"},
-        {id: "8", src: "product-8.jpg"},
-        {id: "9", src: "product-8.jpg"},
-        {id: "10", src: "product-8.jpg"},
-        {id: "11", src: "product-8.jpg"},
-        {id: "12", src: "product-8.jpg"},
-    ]
-    const shoes = [
-        {id: "1", src: "product-1.jpg"},
-        {id: "2", src: "product-1.jpg"},
-        {id: "3", src: "product-1.jpg"},
-        {id: "4", src: "product-1.jpg"},
-        {id: "5", src: "product-1.jpg"},
-        {id: "6", src: "product-1.jpg"},
-        {id: "7", src: "product-1.jpg"},
-        {id: "8", src: "product-1.jpg"},
-        {id: "9", src: "product-1.jpg"},
-        {id: "10", src: "product-1.jpg"},
-        {id: "11", src: "product-1.jpg"},
-        {id: "12", src: "product-1.jpg"},
-    ]
+    const mockData = [
+        ...springList,
+        ...summerList,
+        ...winterList,
+        ...autumnList,
+    ];
+
+    const promotedProducts = mockData.reduce((products, product) => {
+        if(product.id % 2 === 0) {
+            product.promotionStatus = true;
+            products.push(product);
+        }
+        return products;
+    }, []);
+
     return (
         <>
             <Slideshow/>
@@ -53,8 +40,10 @@ const Index = () => {
                 })}
             </Grid>
 
-            <Overflow title={"tops"} products={tops} navigate={navigate}/>
-            <Overflow title={"shoes"} products={shoes} navigate={navigate}/>
+            <Overflow title={"Promotions"} products={promotedProducts} navigate={navigate}/>
+            <Overflow title={"Fall season sales"} products={[...autumnList]} navigate={navigate}/>
+            <Overflow title={"More items to consider"} products={[...winterList]} navigate={navigate}/>
+            <Overflow title={"Selected for you"} products={[...springList]} navigate={navigate}/>
         </>
     );
 }
