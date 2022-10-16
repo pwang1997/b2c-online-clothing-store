@@ -1,6 +1,6 @@
 import React from "react";
 import {Route, Routes} from "react-router-dom";
-import Storefront from "../pages/Storefront/Storefront";
+import Storefront from "../pages/Storefront";
 import UserRouter from "./UserRouter";
 import ProductRouter from "./ProductRouter";
 import AdminRouter from "./AdminRouter";
