@@ -1,24 +1,15 @@
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
 import {Button, Link} from "@mui/material";
 import SearchBar from "./SearchBar";
 import UserMenu from "./UserMenu";
 import Grid from "@mui/material/Unstable_Grid2";
 import NavBar from "../NavBar";
 
-const links = [
-    {name: "Home", url: "/"},
-    {name: "Product", url: "/product"},
-    {name: "Product Gallery", url: "/products"},
-    {name: "ShoppingCart", url: "/cart"},
-    {name: "Checkout", url: "/checkout"},
-];
-
 export default function Header() {
 
     return (
-        <Box sx={{flexGrow: 1}}>
+        <Box sx={{flexGrow: 1, mb : 2}}>
             <AppBar position="static">
                 {/*<Toolbar>*/}
                 <Grid container>
@@ -39,28 +30,6 @@ export default function Header() {
                 </Grid>
                 {/*</Toolbar>*/}
             </AppBar>
-
-
-            <Toolbar
-                component="nav"
-                variant="dense"
-                sx={{justifyContent: "center", overflowX: "auto"}}
-            >
-                {links.map((link, idx) => {
-                    return (
-                        <Link
-                            color="inherit"
-                            noWrap
-                            key={idx}
-                            variant="body1"
-                            href={link.url}
-                            sx={{p: 1, flexShrink: 0}}
-                        >
-                            {link.name}
-                        </Link>
-                    );
-                })}
-            </Toolbar>
         </Box>
     );
 }
