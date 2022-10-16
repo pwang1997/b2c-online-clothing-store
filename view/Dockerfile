@@ -16,7 +16,7 @@ FROM node:14.17-alpine as react_build
 #also say 
 WORKDIR /app
 #copy the react app to the container
-COPY ["package.json", "yarn.lock", "./"]
+COPY ["package.json", "./"]
 RUN ["yarn"]
 COPY . /app/ 
 
