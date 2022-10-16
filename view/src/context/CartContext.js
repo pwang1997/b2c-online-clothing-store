@@ -9,8 +9,17 @@ export const CartProvider = ({ children }) => {
 
     //cart methods
     const addItemToCart = (item) => {
-        setCart([...cart, item]);
-        localStorage.setItem('cart', JSON.stringify([...cart, item]));
+        const existItem = cart.find(el => el.id === item.id);
+
+        if(existItem) {
+            existItem.amount+=1;
+            setCart([...cart]);
+            localStorage.setItem('cart', JSON.stringify([...cart]));
+        } else {
+            item.amount = 1;
+            setCart([...cart, item]);
+            localStorage.setItem('cart', JSON.stringify([...cart, item]));
+        }
     };
 
     const removeItemFromCart = (itemId) => {
