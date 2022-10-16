@@ -5,6 +5,7 @@ import {
 } from "@mui/material";
 import {useLocation, useNavigate} from "react-router-dom";
 import {CartContext} from "../../context/CartContext";
+import {useCookies} from "react-cookie";
 
 export default function ProductCard(props) {
     const {
@@ -15,6 +16,8 @@ export default function ProductCard(props) {
     const navigate = useNavigate();
     const location = useLocation();
     const cartContext = useContext(CartContext);
+    const [cookie, setCookie] = useCookies(['user']);
+    const userCookie = cookie['user'];
 
     const data = {
         id: id,
@@ -31,6 +34,12 @@ export default function ProductCard(props) {
     };
 
     const handleAddProduct2Card = () => {
+        // if user not login, redirect to login page
+        if(!userCookie) {
+            navigate("/sign-in");
+            return;
+        }
+
         cartContext.addItemToCart(data);
     }
 

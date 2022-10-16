@@ -27,7 +27,7 @@ export default function Header() {
                     </Grid>
                     <Grid item xs={1} md={1} display={{xs: "none", md: "block"}}>
                         <Link href="/" underline="none" color="white">
-                            <Button variant="secondary">Placeholder</Button>
+                            <Button variant="secondary">B2C-G8</Button>
                         </Link>
                     </Grid>
                     <Grid item xs={8} sx={{flex: 1}}>

@@ -9,7 +9,7 @@ import {
   winterList,
 } from "../../mock/product";
 
-const ProductGallery = () => {
+export default function ProductGallery () {
   const location = useLocation();
   const dataMap = {
     spring: springList,
@@ -40,11 +40,11 @@ const ProductGallery = () => {
       })}
     </Grid>
   );
-
+};
 // import {useFirebaseProductCollection} from "../../context/FirebaseContext";
 // import {fetchAllProductsService, fetchProductsByProductNameService, fetchProductsByCategoryService} from "../../services/ProductService";
 //
-// const ProductGallery = () => {
+// const Index = () => {
 //     const productCollectionRef = useFirebaseProductCollection();
 //
 //     const location = useLocation();
@@ -85,5 +85,3 @@ const ProductGallery = () => {
 //             //     })
 //             // }
 //     );
-};
-export default ProductGallery;

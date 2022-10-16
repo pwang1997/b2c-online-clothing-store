@@ -8,7 +8,7 @@ import Slideshow from "../../components/SlideShow";
 import Overflow from "../../components/OverFlow";
 import SeasonalProductCard from "../../components/SeasonalProductCard";
 
-const StoreFront = () => {
+const Index = () => {
     const navigate = useNavigate();
 
     const tops = [
@@ -58,4 +58,4 @@ const StoreFront = () => {
         </>
     );
 }
-export default StoreFront;
+export default Index;
