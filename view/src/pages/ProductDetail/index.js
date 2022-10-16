@@ -1,11 +1,16 @@
 import {Box, Typography, Divider, Button} from "@mui/material";
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import {useLocation} from "react-router-dom";
+import {CartContext} from "../../context/CartContext";
 
 export default function ProductDetail() {
     const location = useLocation();
-
     const [data, setData] = useState(location.state);
+    const cartContext = useContext(CartContext);
+
+    const handleAddProduct2Card = () => {
+        cartContext.addItemToCart(data);
+    }
 
     return (
         <Box sx={{display: "flex", justifyContent: "start", margin: "12px"}}>
@@ -21,11 +26,11 @@ export default function ProductDetail() {
                 <Divider/>
                 {/*Price part*/}
                 <Box className="main" sx={{margin: "12px 0"}}>
-                    <Typography className="body-item">
+                    <div className="body-item">
                         {
                             (data.promotionStatus) ?
                                 <>
-                                    <span className="label"><b>Price</b>: </span>
+                                    {/*<span className="label"><b>Price</b>: </span>*/}
                                     <Box
                                         sx={{
                                             backgroundColor: "#f50057",
@@ -50,7 +55,7 @@ export default function ProductDetail() {
                                     <b>Price: </b>  ${data.price}
                                 </Typography>
                         }
-                    </Typography>
+                    </div>
                     <Typography className="body-item">
                         <span className="label"> <b>Description</b>:</span>
                         {data?.productDescription}
@@ -60,7 +65,7 @@ export default function ProductDetail() {
                         {"Moderate size order with regular size"}
                     </Typography>
                     <Typography className="body-item">
-                        <sapn className="label"><b>Color</b>:</sapn>
+                        <span className="label"><b>Color</b>:</span>
                         {"Healther Navy"}
                     </Typography>
                     <Divider/>
@@ -70,21 +75,21 @@ export default function ProductDetail() {
                             Product Details
                         </Typography>
                         <Typography className="body-item">
-                            <sapn className="label">Types of Fabric:</sapn>
+                            <span className="label">Types of Fabric:</span>
                             {"100% cotton"}
                         </Typography>
                         <Typography className="body-item">
-                            <sapn className="label">Instructions:</sapn>
+                            <span className="label">Instructions:</span>
                             {
                                 "For a child to be born with this disability indicates a defect in obstetric care."
                             }
                         </Typography>
                         <Typography className="body-item">
-                            <sapn className="label">Country of origin:</sapn>
+                            <span className="label">Country of origin:</span>
                             {"China"}
                         </Typography>
                         <Box className="btn">
-                            <Button variant="contained">Add to Cart</Button>
+                            <Button variant="contained" onClick={handleAddProduct2Card}>Add to Cart</Button>
                         </Box>
                     </Box>
                     <Divider/>
