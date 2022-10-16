@@ -1,7 +1,7 @@
 FROM node:14.17-alpine
-WORKDIR /oauth
-COPY ["package.json", "yarn.lock", "./"]
-RUN ["yarn"]
+WORKDIR /payment
+COPY ["package.json", "package-lock.json", "./"]
+RUN ["npm", "install"]
 COPY [".", "./"]
-EXPOSE 3001
-CMD [ "yarn", "start" ]
+EXPOSE 5000
+CMD [ "npm", "start" ]
