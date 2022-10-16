@@ -24,7 +24,7 @@ export default function ProductCard(props) {
             productDescription: productDescription,
             image: url
         }
-        navigate(`/product/${id}`, {state: {data}, replace: true});
+        navigate(`/product/${id}`, {state: data, replace: true});
     };
 
     return (
