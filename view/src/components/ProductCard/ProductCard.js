@@ -1,9 +1,10 @@
-import React from "react";
+import React, {useContext} from "react";
 import {
     Card, Box, Typography, Button, CardContent,
     CardActions, CardMedia
 } from "@mui/material";
 import {useLocation, useNavigate} from "react-router-dom";
+import {CartContext} from "../../context/CartContext";
 
 export default function ProductCard(props) {
     const {
@@ -13,19 +14,25 @@ export default function ProductCard(props) {
 
     const navigate = useNavigate();
     const location = useLocation();
+    const cartContext = useContext(CartContext);
+
+    const data = {
+        id: id,
+        productName: productName,
+        price: price,
+        promotionPrice: promotionPrice,
+        promotionStatus: promotionStatus,
+        productDescription: productDescription,
+        image: url
+    }
 
     const go2ProductDetail = () => {
-        const data = {
-            id: id,
-            productName: productName,
-            price: price,
-            promotionPrice: promotionPrice,
-            promotionStatus: promotionStatus,
-            productDescription: productDescription,
-            image: url
-        }
-        navigate(`/product/${id}`, {state: {data}, replace: true});
+        navigate(`/product/${id}`, {state: data, replace: true});
     };
+
+    const handleAddProduct2Card = () => {
+        cartContext.addItemToCart(data);
+    }
 
     return (
         <Card variant="outlined" sx={{width: 280}}>
@@ -93,7 +100,7 @@ export default function ProductCard(props) {
                 <Button size="small" onClick={go2ProductDetail}>
                     Details
                 </Button>
-                <Button size="small" variant="contained">Add to Cart</Button>
+                <Button size="small" variant="contained" onClick={handleAddProduct2Card}>Add to Cart</Button>
             </CardActions>
         </Card>
     );
