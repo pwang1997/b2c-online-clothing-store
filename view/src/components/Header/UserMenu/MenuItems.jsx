@@ -7,6 +7,8 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import LogoutIcon from '@mui/icons-material/Logout';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import HistoryIcon from '@mui/icons-material/History';
+import {useContext} from "react";
+import {CartContext} from "../../../context/CartContext";
 
 export const MenuItemSignUp = (props) => {
     const {handleMenuClose, navigate} = props;
@@ -64,11 +66,11 @@ export const MenuItemProfile = (props) => {
 
 export const MenuItemShoppingCart = (props) => {
     const {handleMenuClose, navigate} = props;
-
+    const {amountOfItemsInCart} = useContext(CartContext);
     return (<MenuItem component={Link} to="/cart" onClick={() => {
             handleMenuClose();
         }}>
-            <Badge badgeContent={5} color="error">
+            <Badge badgeContent={amountOfItemsInCart()} color="error">
                 <ShoppingCartIcon onClick={() => {
                     navigate("/cart")
                 }}/>

@@ -4,8 +4,12 @@ import Typography from "@mui/material/Typography";
 import {ButtonGroup, FormHelperText} from "@mui/material";
 import Box from "@mui/material/Box";
 import {Fragment} from "react";
+import {useNavigate} from "react-router-dom";
 
-const CartItem = ({itemId, price, amount, reduceItemAmountFromCart, increaseItemAmountToCart}) => {
+const CartItem = (props) => {
+    const {product, amount, reduceItemAmountFromCart, increaseItemAmountToCart} = props;
+    const navigate = useNavigate();
+
     return (
         <Fragment>
             <Grid container spacing={2}>
@@ -18,7 +22,11 @@ const CartItem = ({itemId, price, amount, reduceItemAmountFromCart, increaseItem
                     justifyContent='center'
                     alignContent='center'
                 >
-                    {/*<img src={'view/public/img/faw.jpg'} height='150' width='150'  alt={itemId}/>*/}
+                    <img src={product.image} height='150' width='150' alt={product.productName} onClick={
+                        () => {
+                            navigate(`/product/${product.id}`, {state: product, replace: true});
+                        }
+                    }/>
                 </Grid>
 
                 <Grid
@@ -30,7 +38,7 @@ const CartItem = ({itemId, price, amount, reduceItemAmountFromCart, increaseItem
                     justifyContent='center'
                     alignContent='center'
                 >
-                    <Typography variant='inherit'>{itemId}</Typography>
+                    <Typography variant='inherit'>{product.productName}</Typography>
                 </Grid>
 
                 <Grid
@@ -45,7 +53,7 @@ const CartItem = ({itemId, price, amount, reduceItemAmountFromCart, increaseItem
                 >
                     <Box>
                         <FormHelperText> Price </FormHelperText>
-                        <Typography variant='inherit'>{'$' + price}</Typography>
+                        <Typography variant='inherit'>{'$' + product.price}</Typography>
                     </Box>
                 </Grid>
 
@@ -61,23 +69,23 @@ const CartItem = ({itemId, price, amount, reduceItemAmountFromCart, increaseItem
                 >
                     <FormHelperText> Quality </FormHelperText>
                     <ButtonGroup variant="text" aria-label="text button group">
-                            <Button
-                                size="small"
-                                variant="outlined"
-                                onClick={() => reduceItemAmountFromCart(itemId)}
-                            >
-                                -
-                            </Button>
+                        <Button
+                            size="small"
+                            variant="outlined"
+                            onClick={() => reduceItemAmountFromCart(product.id)}
+                        >
+                            -
+                        </Button>
                         <Box component="span">
                             {amount}
                         </Box>
-                            <Button
-                                size="small"
-                                variant="outlined"
-                                onClick={() => increaseItemAmountToCart(itemId)}
-                            >
-                                +
-                            </Button>
+                        <Button
+                            size="small"
+                            variant="outlined"
+                            onClick={() => increaseItemAmountToCart(product.id)}
+                        >
+                            +
+                        </Button>
                     </ButtonGroup>
 
                 </Grid>
@@ -94,20 +102,8 @@ const CartItem = ({itemId, price, amount, reduceItemAmountFromCart, increaseItem
                 >
                     <FormHelperText> Total </FormHelperText>
                     <Typography variant='inherit'>
-                        {'$' + (price * amount).toFixed(2)}
+                        {'$' + (product.price * amount).toFixed(2)}
                     </Typography>
-                </Grid>
-
-                <Grid
-                    item
-                    xs={12}
-                    sm={2}
-                    md={1}
-                    display='grid'
-                    textAlign='center'
-                    justifyContent='center'
-                    alignContent='center'
-                >
                 </Grid>
             </Grid>
         </Fragment>

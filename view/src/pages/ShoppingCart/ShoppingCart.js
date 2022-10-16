@@ -28,10 +28,11 @@ const ShoppingCart = () => {
                 <>
                     <Container className='animate__animated animate__fadeIn'>
                         {cart.map((product) => (
-                            <Fragment key={product.itemId}>
-                                <CartItem  itemId={product.itemId}
-                                           price={product.price}
+                            <Fragment key={product.id}>
+                                {/*{console.log(product)}*/}
+                                <CartItem
                                            amount={product.amount}
+                                           product={product}
                                            increaseItemAmountToCart={increaseItemAmountToCart}
                                            reduceItemAmountFromCart={reduceItemAmountFromCart} />
                                 <Divider variant='middle' sx={{ my: 5 }} />

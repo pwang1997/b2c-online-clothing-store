@@ -70,9 +70,9 @@ const Checkout = () => {
                             </Typography>
                             <List disablePadding>
                                 {cart.map((product) => (
-                                    <ListItem key={product.itemId} sx={{ py: 1, px: 0 }}>
+                                    <ListItem key={product.id} sx={{ py: 1, px: 0 }}>
                                         <ListItemText
-                                            primary={product.itemId}
+                                            primary={product.productName}
                                             secondary={'x'+product.amount}
                                         />
                                         <Typography variant="body2">
