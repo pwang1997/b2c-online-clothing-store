@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -23,6 +24,15 @@ export default function SignUp() {
     const userCollectionRef = useFirebaseUserCollection();
     const navigate = useNavigate();
     const [cookies, setCookie] = useCookies(['user']);
+
+
+    useEffect(()=> {
+        // prevent logged-in user accessing sign-up
+        if(cookies['user']) {
+            navigate('/');
+        }
+    }, []);
+
 
     const handleSubmit = (event) => {
         event.preventDefault();
