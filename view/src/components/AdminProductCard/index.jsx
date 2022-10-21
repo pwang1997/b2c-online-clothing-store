@@ -1,17 +1,21 @@
-import React, { useRef, useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { TextField } from "@mui/material";
 import { doc } from "firebase/firestore";
 import { db } from "../../firebase-config";
 import {
-  deleteProductService,
+  deleteProductService, fetchProductImageService,
   updateProductService,
 } from "../../services/ProductService";
 import _ from 'lodash';
+import {useFirebaseStorage} from "../../context/FirebaseContext";
 
 export default function AdminProductCard(props) {
-  const { id, productName, price, description, promotionStatus, promotionPrice } = props;
+  const { id, productName, price, description, promotionStatus, promotionPrice, image } = props;
+  const useStorage = useFirebaseStorage();
+
+  const [imageURL, setImageURl] = useState();
 
   let originalProduct = {
     productName: productName,
@@ -32,6 +36,14 @@ export default function AdminProductCard(props) {
   const promotionPriceRef = useRef(promotionPrice);
 
   const [productPromotionStatus, setProductPromotionStatus] = useState(promotionStatus);
+
+  useEffect(() => {
+    // fetch product image url
+    if(!image) {
+      return;
+    }
+    fetchProductImageService(useStorage, image, setImageURl);
+  },[]);
 
   const handleChange = (event) => {
     setProductPromotionStatus(event.target.value);
@@ -138,7 +150,6 @@ export default function AdminProductCard(props) {
             ))}
           </TextField>
         </Grid>
-
         <Grid item>
           <TextField
             id="promotionPrice"
@@ -147,6 +158,10 @@ export default function AdminProductCard(props) {
             inputRef={promotionPriceRef}
             defaultValue={promotionPrice}
           />
+        </Grid>
+
+        <Grid item>
+          <img sx={{maxWidth:"200px", maxHeight:"200px"}} src={imageURL} alt={image} />
         </Grid>
 
         <Button

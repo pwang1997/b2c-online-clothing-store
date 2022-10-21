@@ -1,5 +1,5 @@
 import {addDoc, getDocs, updateDoc, deleteDoc, query, where} from "firebase/firestore";
-import {ref, uploadBytes} from "firebase/storage";
+import {ref, uploadBytes, getDownloadURL} from "firebase/storage";
 import {v4} from "uuid";
 
 export const fetchProductsByCategory = async (firebaseContext, categoryName) => {
@@ -48,4 +48,9 @@ export const deleteProduct = async(firebaseContext) => {
 export const addProductImage = async(firebaseContext, productImage) => {
     const imageRef = ref(firebaseContext, `products/${v4()}`)
     return await uploadBytes(imageRef, productImage);
+}
+
+export const fetchProductImage = async(firebaseContext, imageName) => {
+    const storageRef = ref(firebaseContext, imageName);
+    return await getDownloadURL(storageRef)
 }

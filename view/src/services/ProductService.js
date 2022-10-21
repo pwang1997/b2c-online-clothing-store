@@ -5,7 +5,7 @@ import {
     fetchAllProducts,
     fetchProductByProductName,
     fetchProductsByCategory,
-    addProductImage
+    addProductImage, fetchProductImage
 } from "../apis/Products";
 
 export const fetchProductsByCategoryService = (firebaseContext, categoryName, setProducts) => {
@@ -110,4 +110,14 @@ export const deleteProductService = (firebaseContext) => {
         console.log(res);
         console.log("arrived at finally");
     });
+}
+
+export const fetchProductImageService = (firebaseContext, imageName, setImageURL) => {
+    fetchProductImage(firebaseContext, imageName)
+        .then((res) => {
+            setImageURL(res);
+        })
+        .catch((err) => {
+            console.error(err);
+        });
 }
