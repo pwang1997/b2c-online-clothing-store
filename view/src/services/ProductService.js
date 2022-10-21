@@ -1,4 +1,12 @@
-import {addProduct, updateProduct, deleteProduct, fetchAllProducts, fetchProductByProductName, fetchProductsByCategory} from "../apis/Products";
+import {
+    addProduct,
+    updateProduct,
+    deleteProduct,
+    fetchAllProducts,
+    fetchProductByProductName,
+    fetchProductsByCategory,
+    addProductImage
+} from "../apis/Products";
 
 export const fetchProductsByCategoryService = (firebaseContext, categoryName, setProducts) => {
     let results = [];
@@ -9,8 +17,8 @@ export const fetchProductsByCategoryService = (firebaseContext, categoryName, se
     fetchProductsByCategory(firebaseContext, categoryName).then((res) => {
         res.docs.forEach((doc) => {
             const data = {
-                id : doc.id,
-                product : doc.data()
+                id: doc.id,
+                product: doc.data()
             }
             results.push(data);
         })
@@ -30,8 +38,8 @@ export const fetchAllProductsService = (firebaseContext, setProducts) => {
     fetchAllProducts(firebaseContext).then((res) => {
         res.docs.forEach((doc) => {
             const data = {
-                id : doc.id,
-                product : doc.data()
+                id: doc.id,
+                product: doc.data()
             }
             results.push(data);
         })
@@ -45,15 +53,15 @@ export const fetchAllProductsService = (firebaseContext, setProducts) => {
 
 export const fetchProductsByProductNameService = (firebaseContext, productName, setProducts) => {
     let results = [];
-    if(!firebaseContext) {
+    if (!firebaseContext) {
         return results;
     }
 
     fetchProductByProductName(firebaseContext, productName).then((res) => {
         res.docs.forEach((doc) => {
             const data = {
-                id : doc.id,
-                product : doc.data()
+                id: doc.id,
+                product: doc.data()
             }
             results.push(data);
         })
@@ -64,17 +72,22 @@ export const fetchProductsByProductNameService = (firebaseContext, productName, 
     });
 }
 
-export const addProductService = (firebaseContext, product) => {
+export const addProductService = (firebaseContexts, product, productImage) => {
+    addProductImage(firebaseContexts.storage, productImage)
+        .then((res) => {
+            product.imageUrl = res?.metadata?.fullPath;
+            // connect product image url with product detail
+            addProduct(firebaseContexts.db, product);
+        })
+        .then(res => {
+            alert("Added product with image");
+        })
+        .catch((err) => {
+            console.error(err);
+        })
+        .finally(() => {
 
-    addProduct(firebaseContext, product).then((res) => {
-        console.log(res);
-        console.log("then completed")
-    }).catch((err) => {
-        console.error(err);
-    }).finally((res) => {
-        console.log(res);
-        console.log("arrived at finally");
-    })
+        });
 }
 
 export const updateProductService = (firebaseContext, product) => {
