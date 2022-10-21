@@ -1,9 +1,14 @@
-import { FirebaseUserCollectionContext, FirebaseProductCollectionContext } from './FirebaseContext';
+import {
+    FirebaseUserCollectionContext,
+    FirebaseProductCollectionContext,
+    FirebaseStorageContext
+} from './FirebaseContext';
 import { combineComponents } from '../utils/combineComponents';
 
 const providers = [
     FirebaseUserCollectionContext,
-    FirebaseProductCollectionContext
+    FirebaseProductCollectionContext,
+    FirebaseStorageContext
 ];
 
 export const AppContextProvider = combineComponents(...providers);
