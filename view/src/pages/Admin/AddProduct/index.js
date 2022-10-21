@@ -3,12 +3,15 @@ import {useRef, useState} from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from "@mui/material/Grid";
-import {FormControl, Input, InputAdornment, InputLabel} from "@mui/material";
+import {FormControl, Input, InputAdornment, InputLabel, TextField} from "@mui/material";
 import {useFirebaseProductCollection, useFirebaseStorage} from "../../../context/FirebaseContext";
 import {addProductService} from "../../../services/ProductService";
 import Admin from "../../Admin";
+import {ProductCategories, PromotionStatuses} from "../../../constants/Products";
 
 export default function AddProduct(props) {
+    const promotionStatuses = PromotionStatuses;
+    const productCategories = ProductCategories;
 
     const useProductContextRef = useFirebaseProductCollection();
     const useStorage = useFirebaseStorage();
@@ -16,7 +19,10 @@ export default function AddProduct(props) {
     const productNameRef = useRef("");
     const productDescriptionRef = useRef("");
     const productDefaultPriceRef = useRef(0);
-    const [productImage, setProductImage] = useState(null);
+    const productPromotionPriceRef = useRef(-1);
+    const [productPromotionStatus, setProductPromotionStatus] = useState(false);
+    const [productImage, setProductImage] = useState("");
+    const [productCategory, setProductCategory] = useState("");
 
     const handleAddProduct = (event) => {
         event.preventDefault();
@@ -24,7 +30,10 @@ export default function AddProduct(props) {
         const product = {
             productName: productNameRef.current.value,
             description: productDescriptionRef.current.value,
-            price: productDefaultPriceRef.current.value
+            price: parseFloat(productDefaultPriceRef.current.value),
+            category : productCategory,
+            promotionStatus : productPromotionStatus == "true",
+            promotionPrice : parseFloat(productPromotionPriceRef.current.value)
         }
 
         if (!product.productName && !product.price && !product.description && !productImage) {
@@ -36,7 +45,6 @@ export default function AddProduct(props) {
             storage: useStorage,
             db: useProductContextRef
         }, product, productImage);
-
     }
 
 
@@ -82,6 +90,52 @@ export default function AddProduct(props) {
                 </Grid>
 
                 <Grid item>
+                    <TextField
+                        select
+                        onChange={(e) => setProductCategory(e.target.value)}
+                        SelectProps={{
+                            native: true,
+                        }}
+                        helperText="Product Category"
+                    >
+                        {productCategories.map((category) => (
+                            <option key={category.label} value={category.label}>
+                                {category.label}
+                            </option>
+                        ))}
+                    </TextField>
+                </Grid>
+
+                <Grid item>
+                    <TextField
+                        select
+                        onChange={(e) => setProductPromotionStatus(e.target.value)}
+                        SelectProps={{
+                            native: true,
+                        }}
+                        helperText="Promotion Status"
+                        value={productPromotionStatus}
+                    >
+                        {promotionStatuses.map((status) => (
+                            <option key={status.value} value={status.value}>
+                                {status.label}
+                            </option>
+                        ))}
+                    </TextField>
+                </Grid>
+
+                <Grid item>
+                    <FormControl fullWidth sx={{m: 1}} variant="standard">
+                        <InputLabel htmlFor="productPromotionPrice">Promotion Price</InputLabel>
+                        <Input
+                            id="productPromotionPrice"
+                            inputRef={productPromotionPriceRef}
+                            startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                        />
+                    </FormControl>
+                </Grid>
+
+                <Grid item>
                     <Button fullWidth variant="contained" component="label">
                         Upload Image
                         <input
@@ -92,7 +146,7 @@ export default function AddProduct(props) {
                                 setProductImage(e.target.files[0])
                             }}/>
                     </Button>
-                    {productImage.name}
+                    {productImage?.name}
                 </Grid>
 
                 <Grid item>
