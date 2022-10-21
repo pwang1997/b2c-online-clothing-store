@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -14,7 +14,7 @@ import { useFirebaseUserCollection } from "../../context/FirebaseContext";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from 'react-cookie';
 import { validateLoginService } from '../../services/UserService';
-
+import { GoogleLogin } from 'react-google-login';
 
 const theme = createTheme();
 
@@ -43,11 +43,29 @@ export default function SignIn() {
             data, setEmail, setPassword, setCookie, navigate);
     };
 
-    const loginWithGoogleOAuth = async (event) => {
-        event.preventDefault();
-        window.open("http://localhost:3001/api/v1/google/oauth", "_self");
+    const loginWithGoogleOAuth = async (response) => {
+        const data = {
+            username : response.profileObj.name,
+            email : response.profileObj.email,
+            imageUrl : response.profileObj.imageUrl,
+            source : "google"
+        }
+
+        setCookie('user', JSON.stringify(data), 
+        { path: '/', expires: new Date(Date.now() + 30 * 60 * 1000), httpOnly: false });
+        navigate('/');
     };
 
+    const handleGoogleOAuthFailure = (response) => {
+        console.error(response);
+    }
+
+    useEffect(()=> {
+        // prevent logged-in user accessing sign-in
+        if(userCookie) {
+            navigate('/');
+        }
+    }, [])
 
     return (
         <ThemeProvider theme={theme}>
@@ -111,15 +129,23 @@ export default function SignIn() {
                         >
                             Sign In
                         </Button>
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            onClick={loginWithGoogleOAuth}
-                            sx={{ mb: 2 }}
-                        >
-                            Sign In With Google
-                        </Button>
+                        <GoogleLogin
+                            render={renderProps => (
+                                <Button
+                                    type="submit"
+                                    fullWidth
+                                    onClick={renderProps.onClick}
+                                    variant="contained"
+                                    sx={{ mb: 2 }}
+                                >
+                                    Sign In With Google
+                                </Button>
+                            )}
+                            clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+                            onSuccess={loginWithGoogleOAuth}
+                            onFailure={handleGoogleOAuthFailure}
+                            cookiePolicy={'single_host_origin'}
+                        />
                         <Grid container>
                             {/*<Grid item xs>*/}
                             {/*    <Link href="#" variant="body2">*/}
