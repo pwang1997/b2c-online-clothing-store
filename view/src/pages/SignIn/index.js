@@ -13,7 +13,10 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useFirebaseUserCollection } from "../../context/FirebaseContext";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from 'react-cookie';
-import { validateLoginService } from '../../services/UserService';
+import {
+    signupOAuthUserService,
+    validateLoginService
+} from '../../services/UserService';
 import { GoogleLogin } from 'react-google-login';
 
 const theme = createTheme();
@@ -50,10 +53,8 @@ export default function SignIn() {
             imageUrl : response.profileObj.imageUrl,
             source : "google"
         }
-
-        setCookie('user', JSON.stringify(data), 
-        { path: '/', expires: new Date(Date.now() + 30 * 60 * 1000), httpOnly: false });
-        navigate('/');
+        // sign up to firebase/users if not exists, otherwise, do nothing.
+        signupOAuthUserService(userCollectionRef, data, setCookie, navigate);
     };
 
     const handleGoogleOAuthFailure = (response) => {

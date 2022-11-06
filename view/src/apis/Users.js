@@ -13,3 +13,12 @@ export const validateLogin = async (firebaseContext, email, password) => {
 export const signupUserWithEmailPassword = async (firebaseContext, data) => {
     return await addDoc(firebaseContext, data);
 };
+
+export const fetchUserByEmail = async (firebaseContext, email) => {
+    const q = query(
+        firebaseContext,
+        where("email", "==", email)
+    );
+
+    return await getDocs(q);
+}
