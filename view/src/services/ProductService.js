@@ -11,14 +11,15 @@ import {
 export const fetchProductsByCategoryService = (firebaseContext, categoryName, setProducts) => {
     let results = [];
     if (!firebaseContext || !categoryName) {
-        return results;
+        setProducts(results);
+        return;
     }
 
     fetchProductsByCategory(firebaseContext, categoryName).then((res) => {
         res.docs.forEach((doc) => {
             const data = {
                 id: doc.id,
-                product: doc.data()
+                ...doc.data()
             }
             results.push(data);
         })

@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {
     Card, Box, Typography, Button, CardContent,
     CardActions, CardMedia
@@ -6,41 +6,41 @@ import {
 import {useLocation, useNavigate} from "react-router-dom";
 import {CartContext} from "../../context/CartContext";
 import {useCookies} from "react-cookie";
+import {fetchProductImageService} from "../../services/ProductService";
+import {useFirebaseStorage} from "../../context/FirebaseContext";
 
 export default function ProductCard(props) {
-    const {
-        id, productName, productDescription, image,
-        price, promotionPrice, promotionStatus = (id % 2 === 0)
-    } = props;
-
+    const {product} = props;
+    // react-router-dom
     const navigate = useNavigate();
     const location = useLocation();
+    // context
     const cartContext = useContext(CartContext);
+    const useStorage = useFirebaseStorage();
+
     const [cookie, setCookie] = useCookies(['user']);
     const userCookie = cookie['user'];
+    const [image, setImage] = useState();
 
-    const data = {
-        id: id,
-        productName: productName,
-        price: price,
-        promotionPrice: promotionPrice,
-        promotionStatus: promotionStatus,
-        productDescription: productDescription,
-        image: image
-    }
+    useEffect(() => {
+        if (product?.imageUrl) {
+            fetchProductImageService(useStorage, product.imageUrl, setImage);
+        }
+    }, [])
+
 
     const go2ProductDetail = () => {
-        navigate(`/product/${id}`, {state: data, replace: true});
+        navigate(`/product/${product?.id}`, {state: product, replace: true});
     };
 
     const handleAddProduct2Card = () => {
         // if user not login, redirect to login page
-        if(!userCookie) {
+        if (!userCookie) {
             navigate("/sign-in");
             return;
         }
 
-        cartContext.addItemToCart(data);
+        cartContext.addItemToCart(product);
     }
 
     return (
@@ -50,11 +50,11 @@ export default function ProductCard(props) {
                     component={"img"}
                     height={"280"}
                     image={image}
-                    alt={productName}
+                    alt={product?.productName}
                     onClick={go2ProductDetail}
                 />
                 <Typography variant="h5" component="div">
-                    {productName}
+                    {product?.productName}
                 </Typography>
                 <Typography
                     sx={{
@@ -67,11 +67,11 @@ export default function ProductCard(props) {
                     color="text.secondary"
                     gutterBottom
                 >
-                    {productDescription}
+                    {product?.productDescription}
                 </Typography>
 
                 {
-                    (promotionStatus || location?.state?.promotionStatus) ?
+                    (product?.promotionStatus || location?.state?.promotionStatus) ?
                         <Box
                             sx={{
                                 margin: "8px 0",
@@ -93,15 +93,15 @@ export default function ProductCard(props) {
                                 20% off
                             </Box>
                             <Typography variant="body1">
-                                ${promotionPrice?.split(".")[0]}
-                                <sup>{promotionPrice?.split(".")[1]}</sup>
+                                ${product?.promotionPrice?.split(".")[0]}
+                                <sup>{product?.promotionPrice?.split(".")[1]}</sup>
                             </Typography>
                             <Typography variant="body1">
-                                Was : <del>${price}</del>
+                                Was : <del>${product?.price}</del>
                             </Typography>
                         </Box> :
                         <Typography variant="body1">
-                            ${price}
+                            ${product?.price}
                         </Typography>
                 }
             </CardContent>
