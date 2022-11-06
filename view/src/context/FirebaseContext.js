@@ -19,3 +19,9 @@ export const FirebaseStorageContext = createContext(storage);
 export function useFirebaseStorage() {
     return useContext(FirebaseStorageContext);
 }
+
+export const FirebaseShoppingCartCollectionContext = createContext(collection(db, "shoppingCarts"));
+
+export function useFirebaseShoppingCartCollection() {
+    return useContext(FirebaseShoppingCartCollectionContext);
+}
