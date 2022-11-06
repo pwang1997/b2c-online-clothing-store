@@ -1,9 +1,11 @@
 import {Box, Typography, Divider, Button} from "@mui/material";
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import {CartContext} from "../../context/CartContext";
 import {useCookies} from "react-cookie";
 import Grid from "@mui/material/Grid";
+import { useFirebaseStorage } from "../../context/FirebaseContext";
+import { fetchProductImageService } from "../../services/ProductService";
 
 export default function ProductDetail() {
     const location = useLocation();
@@ -12,7 +14,14 @@ export default function ProductDetail() {
     const userCookie = cookie['user'];
 
     const [data, setData] = useState(location.state);
+    const [image, setImage] = useState();
+
     const cartContext = useContext(CartContext);
+    const useStorage = useFirebaseStorage();
+
+    useEffect(() => {
+        fetchProductImageService(useStorage, data.imageUrl, setImage);
+    }, []);
 
     const handleAddProduct2Card = () => {
         // if user not login, redirect to login page
@@ -29,7 +38,7 @@ export default function ProductDetail() {
             <Grid container >
                 <Grid item xs={12} md={3}>
                     <Box sx={{maxHeight:"300px", maxWidth: "300px", display: "inline-block"}}>
-                        <img src={data?.image} alt={data.productName} className="img"/>
+                        <img src={image} alt={data.productName} className="img"/>
                     </Box>
                 </Grid>
                 <Grid item md={3}></Grid>
