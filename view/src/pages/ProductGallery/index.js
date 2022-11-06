@@ -16,7 +16,7 @@ export default function ProductGallery () {
       console.log(location.state?.category);
       fetchProductsByCategoryService(productContext, location.state.category, setProducts);
     }
-  }, [location.state?.category]);
+  }, [location.state]);
 
   return (
     <Grid container gap={2} sx={{ justifyContent: "space-evenly" }}>
