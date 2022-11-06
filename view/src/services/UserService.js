@@ -23,9 +23,13 @@ export const validateLoginService = async (
             setPassword("");
             return;
         }
+        const userDocs = {
+            uid : res.docs[0].id,
+            ...res.docs[0].data()
+        }
         // save to cookie for 30 minutes
         // if(remember) {
-        setCookie('user', JSON.stringify(res.docs[0].data()), { path: '/', expires: new Date(Date.now() + 30 * 60 * 1000), httpOnly: false });
+        setCookie('user', JSON.stringify(userDocs), { path: '/', expires: new Date(Date.now() + 30 * 60 * 1000), httpOnly: false });
         // }
 
         navigate("/");
