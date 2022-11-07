@@ -35,6 +35,7 @@ export const MenuItemSignOut = (props) => {
     return (<MenuItem component={Link} to="/" onClick={() => {
             handleMenuClose();
             removeCookie('user');
+            removeCookie('shoppingCart');
             navigate("/");
         }}>
             <LogoutIcon/>

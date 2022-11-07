@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import {useState, useEffect} from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -9,23 +9,25 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useFirebaseUserCollection } from "../../context/FirebaseContext";
-import { useNavigate } from "react-router-dom";
-import { useCookies } from 'react-cookie';
+import {createTheme, ThemeProvider} from '@mui/material/styles';
+import {useFirebaseShoppingCartCollection, useFirebaseUserCollection} from "../../context/FirebaseContext";
+import {useNavigate} from "react-router-dom";
+import {useCookies} from 'react-cookie';
 import {
     signupOAuthUserService,
     validateLoginService
 } from '../../services/UserService';
-import { GoogleLogin } from 'react-google-login';
+import {GoogleLogin} from 'react-google-login';
+import {fetchShoppingCartByUserIdService} from "../../services/ShoppingCartService";
 
 const theme = createTheme();
 
 export default function SignIn() {
     const userCollectionRef = useFirebaseUserCollection();
+    const shoppingCartCtx = useFirebaseShoppingCartCollection();
     const navigate = useNavigate();
 
-    const [cookies, setCookie] = useCookies(['user']);
+    const [cookies, setCookie] = useCookies(['user', 'shoppingCart']);
     const userCookie = cookies['user'];
 
     const [email, setEmail] = useState(userCookie && userCookie.email ? userCookie.email : "");
@@ -40,30 +42,77 @@ export default function SignIn() {
             return;
         }
 
-        const data = { email, password };
+        const data = {email, password};
         // if success, save user email/password to cookie
-        validateLoginService(userCollectionRef,
-            data, setEmail, setPassword, setCookie, navigate);
+        validateLoginService(userCollectionRef, data)
+            .then((res) => {
+                setCookie('user', JSON.stringify(res), {
+                    path: '/',
+                    expires: new Date(Date.now() + 30 * 60 * 1000),
+                    httpOnly: false
+                });
+                return res;
+            })
+            .then((user) => {
+                return fetchShoppingCartByUserIdService(shoppingCartCtx, user?.uid)
+                    .then((cartDocs) => {
+                        setCookie('shoppingCart', JSON.stringify({cartId: cartDocs.id}), {
+                            path: '/',
+                            expires: new Date(Date.now() + 30 * 60 * 1000),
+                            httpOnly: false
+                        });
+
+                        navigate("/");
+                    })
+            })
+            .catch((err) => {
+                setEmail("");
+                setPassword("");
+                console.error(err);
+            })
     };
 
     const loginWithGoogleOAuth = async (response) => {
         const data = {
-            username : response.profileObj.name,
-            email : response.profileObj.email,
-            imageUrl : response.profileObj.imageUrl,
-            source : "google"
+            username: response.profileObj.name,
+            email: response.profileObj.email,
+            imageUrl: response.profileObj.imageUrl,
+            source: "google"
         }
         // sign up to firebase/users if not exists, otherwise, do nothing.
-        signupOAuthUserService(userCollectionRef, data, setCookie, navigate);
+        signupOAuthUserService(userCollectionRef, data)
+            .then((res) => {
+                setCookie('user', JSON.stringify(res), {
+                    path: '/',
+                    expires: new Date(Date.now() + 30 * 60 * 1000),
+                    httpOnly: false
+                });
+                return res;
+            })
+            .then((user) => {
+                return fetchShoppingCartByUserIdService(shoppingCartCtx, user?.uid)
+                    .then((cartDocs) => {
+                        setCookie('shoppingCart', JSON.stringify({cartId: cartDocs.id}), {
+                            path: '/',
+                            expires: new Date(Date.now() + 30 * 60 * 1000),
+                            httpOnly: false
+                        });
+
+                        navigate("/");
+                    })
+            })
+            .catch((err) => {
+                console.error(err);
+            })
     };
 
     const handleGoogleOAuthFailure = (response) => {
         console.error(response);
     }
 
-    useEffect(()=> {
+    useEffect(() => {
         // prevent logged-in user accessing sign-in
-        if(userCookie) {
+        if (userCookie) {
             navigate('/');
         }
     }, [])
@@ -71,7 +120,7 @@ export default function SignIn() {
     return (
         <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">
-                <CssBaseline />
+                <CssBaseline/>
                 <Box
                     sx={{
                         marginTop: 8,
@@ -80,13 +129,13 @@ export default function SignIn() {
                         alignItems: 'center',
                     }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                        <LockOutlinedIcon />
+                    <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
+                        <LockOutlinedIcon/>
                     </Avatar>
                     <Typography component="h1" variant="h5">
                         Sign in
                     </Typography>
-                    <Box component="form" noValidate sx={{ mt: 1 }}>
+                    <Box component="form" noValidate sx={{mt: 1}}>
                         <TextField
                             margin="normal"
                             required
@@ -126,7 +175,7 @@ export default function SignIn() {
                             fullWidth
                             variant="contained"
                             onClick={loginWithEmailPassword}
-                            sx={{ mt: 3, mb: 2 }}
+                            sx={{mt: 3, mb: 2}}
                         >
                             Sign In
                         </Button>
@@ -137,7 +186,7 @@ export default function SignIn() {
                                     fullWidth
                                     onClick={renderProps.onClick}
                                     variant="contained"
-                                    sx={{ mb: 2 }}
+                                    sx={{mb: 2}}
                                 >
                                     Sign In With Google
                                 </Button>

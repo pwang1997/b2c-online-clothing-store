@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import {useEffect} from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,24 +11,25 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useFirebaseUserCollection } from "../../context/FirebaseContext";
-import { useNavigate } from "react-router-dom";
-import { useCookies } from 'react-cookie';
+import {createTheme, ThemeProvider} from '@mui/material/styles';
+import {useFirebaseShoppingCartCollection, useFirebaseUserCollection} from "../../context/FirebaseContext";
+import {useNavigate} from "react-router-dom";
+import {useCookies} from 'react-cookie';
 import {signupUserService} from '../../services/UserService';
+import {fetchShoppingCartByUserIdService} from "../../services/ShoppingCartService";
 
 
 const theme = createTheme();
 
 export default function SignUp() {
     const userCollectionRef = useFirebaseUserCollection();
+    const shoppingCartCtx = useFirebaseShoppingCartCollection();
     const navigate = useNavigate();
-    const [cookies, setCookie] = useCookies(['user']);
+    const [cookies, setCookie] = useCookies(['user', 'shoppingCart']);
 
-
-    useEffect(()=> {
+    useEffect(() => {
         // prevent logged-in user accessing sign-up
-        if(cookies['user']) {
+        if (cookies['user']) {
             navigate('/');
         }
     }, []);
@@ -53,14 +54,42 @@ export default function SignUp() {
             email: email,
             password: password
         }
-        
-        signupUserService(userCollectionRef, data, setCookie, navigate);
+
+        signupUserService(userCollectionRef, data)
+            .then((res) => {
+                const user = {
+                    uid: res.id,
+                    username: data.username,
+                    email: data.email
+                };
+
+                setCookie('user', JSON.stringify(user), {
+                    path: '/',
+                    expires: new Date(Date.now() + 30 * 60 * 1000),
+                    httpOnly: false
+                });
+                return user;
+            })
+            .then((user) => {
+                fetchShoppingCartByUserIdService(shoppingCartCtx, user?.uid)
+                    .then((cartDocs) => {
+                        setCookie('shoppingCart', JSON.stringify({cartId: cartDocs.id}), {
+                            path: '/',
+                            expires: new Date(Date.now() + 30 * 60 * 1000)
+                        });
+
+                        navigate("/");
+                    })
+            })
+            .catch((err) => {
+                console.error(err);
+            });
     };
 
     return (
         <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">
-                <CssBaseline />
+                <CssBaseline/>
                 <Box
                     sx={{
                         marginTop: 8,
@@ -69,13 +98,13 @@ export default function SignUp() {
                         alignItems: 'center',
                     }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                        <LockOutlinedIcon />
+                    <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
+                        <LockOutlinedIcon/>
                     </Avatar>
                     <Typography component="h1" variant="h5">
                         Sign up
                     </Typography>
-                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{mt: 3}}>
                         <Grid container spacing={2}>
                             <Grid item xs={12} sm={6}>
                                 <TextField
@@ -121,7 +150,7 @@ export default function SignUp() {
                             </Grid>
                             <Grid item xs={12}>
                                 <FormControlLabel
-                                    control={<Checkbox value="allowExtraEmails" color="primary" />}
+                                    control={<Checkbox value="allowExtraEmails" color="primary"/>}
                                     label="I want to receive inspiration, marketing promotions and updates via email."
                                 />
                             </Grid>
@@ -130,7 +159,7 @@ export default function SignUp() {
                             type="submit"
                             fullWidth
                             variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
+                            sx={{mt: 3, mb: 2}}
                         >
                             Sign Up
                         </Button>
