@@ -24,15 +24,15 @@ const ShoppingCart = () => {
             </Typography>
             <hr />
             <br />
-            {cart.length > 0 ? (
+            {cart ? (
                 <>
                     <Container className='animate__animated animate__fadeIn'>
-                        {cart.map((product) => (
-                            <Fragment key={product.id}>
+                        {Object.keys(cart?.products).map((pid) => (
+                            <Fragment key={pid}>
                                 {/*{console.log(product)}*/}
                                 <CartItem
-                                           amount={product.amount}
-                                           product={product}
+                                           amount={cart.products[pid].amount}
+                                           product={cart.products[pid].product}
                                            increaseItemAmountToCart={increaseItemAmountToCart}
                                            reduceItemAmountFromCart={reduceItemAmountFromCart} />
                                 <Divider variant='middle' sx={{ my: 5 }} />

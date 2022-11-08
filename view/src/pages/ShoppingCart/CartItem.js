@@ -3,12 +3,22 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import {ButtonGroup, FormHelperText} from "@mui/material";
 import Box from "@mui/material/Box";
-import {Fragment} from "react";
+import {Fragment, useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
+import {fetchProductImageService} from "../../services/ProductService";
+import {useFirebaseStorage} from "../../context/FirebaseContext";
 
 const CartItem = (props) => {
     const {product, amount, reduceItemAmountFromCart, increaseItemAmountToCart} = props;
     const navigate = useNavigate();
+
+    const [image,setImage] = useState();
+    const useStorage = useFirebaseStorage();
+
+    useEffect(() => {
+        console.log(product);
+        fetchProductImageService(useStorage, product.imageUrl, setImage);
+    }, [])
 
     return (
         <Fragment>
@@ -22,7 +32,7 @@ const CartItem = (props) => {
                     justifyContent='center'
                     alignContent='center'
                 >
-                    <img src={product.image} height='150' width='150' alt={product.productName} onClick={
+                    <img src={image} height='150' width='150' alt={product.productName} onClick={
                         () => {
                             navigate(`/product/${product.id}`, {state: product, replace: true});
                         }

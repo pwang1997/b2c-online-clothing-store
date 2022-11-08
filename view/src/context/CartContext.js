@@ -11,14 +11,17 @@ export const CartProvider = ({ children }) => {
         localStorage.setItem('cart', JSON.stringify(newCart));
     }
     //cart methods
-    const addItemToCart = (item) => {
+    const addItemToCart = (product) => {
         const newCart = structuredClone(cart);
         console.log(newCart);
 
-        if(newCart?.products[item.id]) {
-            newCart.products[item.id].amount+=1;
+        if(newCart?.products[product.id]) {
+            newCart.products[product.id].amount+=1;
         } else {
-            newCart.products[item.id] = {amount : 1};
+            newCart.products[product.id] = {
+                amount : 1,
+                product : product
+            };
         }
         console.log(newCart);
         updateCart(newCart);
@@ -29,7 +32,7 @@ export const CartProvider = ({ children }) => {
         if(newCart.products[id].amount === 1) {
             delete newCart.products[id];
         } else {
-            delete newCart.products[id].amount--;
+            newCart.products[id].amount--;
         }
         updateCart(newCart);
     };
@@ -40,9 +43,14 @@ export const CartProvider = ({ children }) => {
 
     const amountOfItems = (id) => cart?.products[id].amount;
 
-    // TODO: replace with fetchProductByPid
-    const totalCartPrice = () => 0;
-        // cart.reduce((acc, item) => (acc += item.price * item.amount), 0);
+    const totalCartPrice = () => cart ? Object.keys(cart.products).reduce((acc, pid) => {
+        const productItem = cart.products[pid];
+        const price = (productItem.product.promotionStatus) ?
+            productItem.product.promotionPrice :
+            productItem.product.price;
+        acc += productItem.amount * price;
+        return acc;
+    },0) : 0;
 
     const resetCart = () => updateCart({uid: cart.uid, products: {}});
 
