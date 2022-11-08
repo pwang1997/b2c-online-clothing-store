@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useContext} from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -19,12 +19,15 @@ import {
 } from '../../services/UserService';
 import {GoogleLogin} from 'react-google-login';
 import {fetchShoppingCartByUserIdService} from "../../services/ShoppingCartService";
+import {CartContext} from "../../context/CartContext";
 
 const theme = createTheme();
 
 export default function SignIn() {
     const userCollectionRef = useFirebaseUserCollection();
     const shoppingCartCtx = useFirebaseShoppingCartCollection();
+    const cartContext = useContext(CartContext);
+
     const navigate = useNavigate();
 
     const [cookies, setCookie] = useCookies(['user', 'shoppingCart']);
@@ -56,6 +59,10 @@ export default function SignIn() {
             .then((user) => {
                 return fetchShoppingCartByUserIdService(shoppingCartCtx, user?.uid)
                     .then((cartDocs) => {
+                        // save cart data to LocalStorage
+                        console.log(cartDocs.data());
+                        cartContext.setCart(cartDocs.data());
+                        // save cart id to cookie
                         setCookie('shoppingCart', JSON.stringify({cartId: cartDocs.id}), {
                             path: '/',
                             expires: new Date(Date.now() + 30 * 60 * 1000),
@@ -92,6 +99,10 @@ export default function SignIn() {
             .then((user) => {
                 return fetchShoppingCartByUserIdService(shoppingCartCtx, user?.uid)
                     .then((cartDocs) => {
+                        // save cart data to LocalStorage
+                        console.log(cartDocs.data());
+                        cartContext.setCart(cartDocs.data());
+                        // save cart id to cookie
                         setCookie('shoppingCart', JSON.stringify({cartId: cartDocs.id}), {
                             path: '/',
                             expires: new Date(Date.now() + 30 * 60 * 1000),

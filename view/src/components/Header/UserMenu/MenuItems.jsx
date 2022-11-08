@@ -36,6 +36,7 @@ export const MenuItemSignOut = (props) => {
             handleMenuClose();
             removeCookie('user');
             removeCookie('shoppingCart');
+            localStorage.removeItem('cart');
             navigate("/");
         }}>
             <LogoutIcon/>

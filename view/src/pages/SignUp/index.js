@@ -1,4 +1,4 @@
-import {useEffect} from 'react';
+import {useContext, useEffect} from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -17,6 +17,7 @@ import {useNavigate} from "react-router-dom";
 import {useCookies} from 'react-cookie';
 import {signupUserService} from '../../services/UserService';
 import {fetchShoppingCartByUserIdService} from "../../services/ShoppingCartService";
+import {CartContext} from "../../context/CartContext";
 
 
 const theme = createTheme();
@@ -24,6 +25,8 @@ const theme = createTheme();
 export default function SignUp() {
     const userCollectionRef = useFirebaseUserCollection();
     const shoppingCartCtx = useFirebaseShoppingCartCollection();
+    const cartContext = useContext(CartContext);
+
     const navigate = useNavigate();
     const [cookies, setCookie] = useCookies(['user', 'shoppingCart']);
 
@@ -73,6 +76,13 @@ export default function SignUp() {
             .then((user) => {
                 fetchShoppingCartByUserIdService(shoppingCartCtx, user?.uid)
                     .then((cartDocs) => {
+                        // create a local empty cart, since the server has created the cart but not returning the data
+                        const cartData = {
+                            uid : user.uid,
+                            products : {}
+                        };
+                        cartContext.setCart(cartData);
+                        // save cart id to cookie
                         setCookie('shoppingCart', JSON.stringify({cartId: cartDocs.id}), {
                             path: '/',
                             expires: new Date(Date.now() + 30 * 60 * 1000)
