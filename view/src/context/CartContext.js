@@ -12,8 +12,7 @@ export const CartProvider = ({ children }) => {
     }
     //cart methods
     const addItemToCart = (product) => {
-        const newCart = structuredClone(cart);
-        console.log(newCart);
+        let newCart = structuredClone(cart);
 
         if(newCart?.products[product.id]) {
             newCart.products[product.id].amount+=1;
@@ -23,7 +22,6 @@ export const CartProvider = ({ children }) => {
                 product : product
             };
         }
-        console.log(newCart);
         updateCart(newCart);
     };
 

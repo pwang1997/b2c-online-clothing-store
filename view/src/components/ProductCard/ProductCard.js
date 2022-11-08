@@ -46,10 +46,7 @@ export default function ProductCard(props) {
 
         cartContext.addItemToCart(product);
 
-        const cart = {
-            uid: userCookie.uid,
-            products: cartContext.cart?.products
-        }
+        const cart = JSON.parse(localStorage.getItem('cart'));
 
         // update products based on the LocalStorage cart
         updateShoppingCartService(shoppingCartCtx, shoppingCartCookie.cartId, cart)
