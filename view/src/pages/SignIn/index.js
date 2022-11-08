@@ -59,10 +59,12 @@ export default function SignIn() {
             .then((user) => {
                 return fetchShoppingCartByUserIdService(shoppingCartCtx, user?.uid)
                     .then((cartDocs) => {
-                        // save cart data to LocalStorage
-                        console.log(cartDocs.data());
-                        localStorage.setItem('cart', JSON.stringify(cartDocs.data()));
-                        cartContext.setCart(cartDocs.data());
+                        const cartData = cartDocs && !cartDocs.type ? cartDocs?.data() : {
+                            uid : user.uid,
+                            products : {}
+                        };
+                        localStorage.setItem('cart', JSON.stringify(cartData));
+                        cartContext.setCart(cartData);
                         // save cart id to cookie
                         setCookie('shoppingCart', JSON.stringify({cartId: cartDocs.id}), {
                             path: '/',
@@ -101,9 +103,12 @@ export default function SignIn() {
                 return fetchShoppingCartByUserIdService(shoppingCartCtx, user?.uid)
                     .then((cartDocs) => {
                         // save cart data to LocalStorage
-                        console.log(cartDocs.data());
-                        localStorage.setItem('cart', JSON.stringify(cartDocs.data()));
-                        cartContext.setCart(cartDocs.data());
+                        const cartData = cartDocs && !cartDocs.type ? cartDocs?.data() : {
+                            uid : user.uid,
+                            products : {}
+                        };
+                        localStorage.setItem('cart', JSON.stringify(cartData));
+                        cartContext.setCart(cartData);
                         // save cart id to cookie
                         setCookie('shoppingCart', JSON.stringify({cartId: cartDocs.id}), {
                             path: '/',

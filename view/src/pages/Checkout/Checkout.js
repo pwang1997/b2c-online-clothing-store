@@ -41,6 +41,8 @@ const Checkout = () => {
     const handleApprove = (orderId) => {
         setPaidFor(true);
         resetCart()
+
+
         navigate('/checkoutSuccess', {state: {orderId: orderId}, replace: true});
     }
 
@@ -69,14 +71,14 @@ const Checkout = () => {
                                 Order summary
                             </Typography>
                             <List disablePadding>
-                                {cart.map((product) => (
-                                    <ListItem key={product.id} sx={{ py: 1, px: 0 }}>
+                                {Object.keys(cart.products).map((pid) => (
+                                    <ListItem key={pid} sx={{ py: 1, px: 0 }}>
                                         <ListItemText
-                                            primary={product.productName}
-                                            secondary={'x'+product.amount}
+                                            primary={cart.products[pid].product.productName}
+                                            secondary={'x'+cart.products[pid].amount}
                                         />
                                         <Typography variant="body2">
-                                            ${product.price}
+                                            ${cart.products[pid].product.price}
                                         </Typography>
                                     </ListItem>
                                 ))}
