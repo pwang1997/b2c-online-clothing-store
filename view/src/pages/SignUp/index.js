@@ -81,6 +81,7 @@ export default function SignUp() {
                             uid : user.uid,
                             products : {}
                         };
+                        localStorage.setItem('cart', JSON.stringify(cartData));
                         cartContext.setCart(cartData);
                         // save cart id to cookie
                         setCookie('shoppingCart', JSON.stringify({cartId: cartDocs.id}), {

@@ -61,6 +61,7 @@ export default function SignIn() {
                     .then((cartDocs) => {
                         // save cart data to LocalStorage
                         console.log(cartDocs.data());
+                        localStorage.setItem('cart', JSON.stringify(cartDocs.data()));
                         cartContext.setCart(cartDocs.data());
                         // save cart id to cookie
                         setCookie('shoppingCart', JSON.stringify({cartId: cartDocs.id}), {
@@ -101,6 +102,7 @@ export default function SignIn() {
                     .then((cartDocs) => {
                         // save cart data to LocalStorage
                         console.log(cartDocs.data());
+                        localStorage.setItem('cart', JSON.stringify(cartDocs.data()));
                         cartContext.setCart(cartDocs.data());
                         // save cart id to cookie
                         setCookie('shoppingCart', JSON.stringify({cartId: cartDocs.id}), {
