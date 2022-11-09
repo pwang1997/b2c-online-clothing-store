@@ -25,3 +25,9 @@ export const FirebaseShoppingCartCollectionContext = createContext(collection(db
 export function useFirebaseShoppingCartCollection() {
     return useContext(FirebaseShoppingCartCollectionContext);
 }
+
+export const FirebaseOrderCollectionContext = createContext(collection(db, "orders"));
+
+export function useFirebaseOrderCollectionContext() {
+    return useContext(FirebaseOrderCollectionContext);
+}
