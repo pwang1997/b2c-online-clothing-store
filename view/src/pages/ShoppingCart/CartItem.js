@@ -6,7 +6,9 @@ import Box from "@mui/material/Box";
 import {Fragment, useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {fetchProductImageService} from "../../services/ProductService";
-import {useFirebaseStorage} from "../../context/FirebaseContext";
+import {useFirebaseShoppingCartCollection, useFirebaseStorage} from "../../context/FirebaseContext";
+import {updateShoppingCartService} from "../../services/ShoppingCartService";
+import {useCookies} from "react-cookie";
 
 const CartItem = (props) => {
     const {product, amount, reduceItemAmountFromCart, increaseItemAmountToCart} = props;
@@ -14,11 +16,41 @@ const CartItem = (props) => {
 
     const [image,setImage] = useState();
     const useStorage = useFirebaseStorage();
+    const shoppingCartCtx = useFirebaseShoppingCartCollection();
+
+    const [cookie, setCookie] = useCookies(['shoppingCart']);
+    const shoppingCartCookie = cookie['shoppingCart'];
 
     useEffect(() => {
         console.log(product);
         fetchProductImageService(useStorage, product.imageUrl, setImage);
-    }, [])
+    }, []);
+
+    const onIncrementProduct2Cart = (pid) => {
+        increaseItemAmountToCart(pid);
+        updateShoppingCartService(shoppingCartCtx,
+            shoppingCartCookie.cartId,
+            JSON.parse(localStorage.getItem('cart')))
+            .then((res) => {
+                console.log("Cloud cart updated");
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+    }
+
+    const onDecrementProduct2Cart = (pid) => {
+        reduceItemAmountFromCart(pid);
+        updateShoppingCartService(shoppingCartCtx,
+            shoppingCartCookie.cartId,
+            JSON.parse(localStorage.getItem('cart')))
+            .then((res) => {
+                console.log("Cloud cart updated");
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+    }
 
     return (
         <Fragment>
@@ -82,7 +114,7 @@ const CartItem = (props) => {
                         <Button
                             size="small"
                             variant="outlined"
-                            onClick={() => reduceItemAmountFromCart(product.id)}
+                            onClick={() => onDecrementProduct2Cart(product.id)}
                         >
                             -
                         </Button>
@@ -92,7 +124,7 @@ const CartItem = (props) => {
                         <Button
                             size="small"
                             variant="outlined"
-                            onClick={() => increaseItemAmountToCart(product.id)}
+                            onClick={() => onIncrementProduct2Cart(product.id)}
                         >
                             +
                         </Button>
