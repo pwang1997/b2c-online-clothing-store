@@ -7,7 +7,8 @@ import {useLocation, useNavigate} from "react-router-dom";
 import {CartContext} from "../../context/CartContext";
 import {useCookies} from "react-cookie";
 import {fetchProductImageService} from "../../services/ProductService";
-import {useFirebaseStorage} from "../../context/FirebaseContext";
+import {useFirebaseShoppingCartCollection, useFirebaseStorage} from "../../context/FirebaseContext";
+import {updateShoppingCartService} from "../../services/ShoppingCartService";
 
 export default function ProductCard(props) {
     const {product} = props;
@@ -17,9 +18,12 @@ export default function ProductCard(props) {
     // context
     const cartContext = useContext(CartContext);
     const useStorage = useFirebaseStorage();
-
-    const [cookie, setCookie] = useCookies(['user']);
+    const shoppingCartCtx = useFirebaseShoppingCartCollection();
+    // cookies
+    const [cookie, setCookie] = useCookies(['user', 'shoppingCart']);
     const userCookie = cookie['user'];
+    const shoppingCartCookie = cookie['shoppingCart'];
+
     const [image, setImage] = useState();
 
     useEffect(() => {
@@ -41,6 +45,17 @@ export default function ProductCard(props) {
         }
 
         cartContext.addItemToCart(product);
+
+        const cart = JSON.parse(localStorage.getItem('cart'));
+
+        // update products based on the LocalStorage cart
+        updateShoppingCartService(shoppingCartCtx, shoppingCartCookie.cartId, cart)
+            .then(() => {
+                alert("Added to cart");
+            })
+            .catch((err) => {
+                console.error(err);
+            })
     }
 
     return (

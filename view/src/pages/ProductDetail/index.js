@@ -4,33 +4,47 @@ import {useLocation, useNavigate} from "react-router-dom";
 import {CartContext} from "../../context/CartContext";
 import {useCookies} from "react-cookie";
 import Grid from "@mui/material/Grid";
-import { useFirebaseStorage } from "../../context/FirebaseContext";
-import { fetchProductImageService } from "../../services/ProductService";
+import {useFirebaseShoppingCartCollection, useFirebaseStorage} from "../../context/FirebaseContext";
+import {fetchProductImageService} from "../../services/ProductService";
+import {updateShoppingCartService} from "../../services/ShoppingCartService";
 
 export default function ProductDetail() {
     const location = useLocation();
     const navigate = useNavigate();
-    const [cookie, setCookie] = useCookies(['user']);
+    const [cookie, setCookie] = useCookies(['user', 'shoppingCart']);
     const userCookie = cookie['user'];
+    const shoppingCartCookie = cookie['shoppingCart'];
 
     const [data, setData] = useState(location.state);
     const [image, setImage] = useState();
 
     const cartContext = useContext(CartContext);
+    const shoppingCartCtx = useFirebaseShoppingCartCollection();
     const useStorage = useFirebaseStorage();
 
     useEffect(() => {
         fetchProductImageService(useStorage, data.imageUrl, setImage);
     }, []);
 
-    const handleAddProduct2Card = () => {
+    const handleAddProduct2Cart = () => {
         // if user not login, redirect to login page
-        if(!userCookie) {
+        if (!userCookie) {
             navigate("/sign-in");
             return;
         }
 
         cartContext.addItemToCart(data);
+
+        const cart = JSON.parse(localStorage.getItem('cart'));
+
+        // update products based on the LocalStorage cart
+        updateShoppingCartService(shoppingCartCtx, shoppingCartCookie.cartId, cart)
+            .then(() => {
+                alert("Added to cart");
+            })
+            .catch((err) => {
+                console.error(err);
+            })
     }
 
     return (
@@ -115,7 +129,7 @@ export default function ProductDetail() {
                                     {"China"}
                                 </Typography>
                                 <Box className="btn">
-                                    <Button variant="contained" onClick={handleAddProduct2Card}>Add to Cart</Button>
+                                    <Button variant="contained" onClick={handleAddProduct2Cart}>Add to Cart</Button>
                                 </Box>
                             </Box>
                             <Divider/>
