@@ -77,7 +77,7 @@ const ShoppingCart = () => {
                                     color="success"
                                     startIcon={<PointOfSaleIcon />}
                                     onClick={() => {
-                                        navigate("/checkout", {state: {cartString: JSON.stringify(cart), totalCartPrice: totalCartPrice()}, replace: true})
+                                        navigate("/checkout", {state: {cart : cart, totalCartPrice: totalCartPrice()}, replace: true})
                                     }}
                                 >
                                     Process to checkout
