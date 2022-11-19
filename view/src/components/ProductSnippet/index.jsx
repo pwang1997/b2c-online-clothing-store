@@ -14,11 +14,12 @@ const ProductSnippet = (props) => {
   }, []);
 
   return (
-    image && 
+    image &&
       <div className="scroll">
         <img
           src={image}
           alt={product.productName}
+          border={"1px solid black"}
           onClick={() =>
             navigate(`/product/${product.id}`, {
               state: product,

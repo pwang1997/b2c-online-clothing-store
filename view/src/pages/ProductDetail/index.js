@@ -1,12 +1,21 @@
-import {Box, Typography, Divider, Button} from "@mui/material";
-import React, {useContext, useEffect, useState} from "react";
+import {Box, Typography, Divider, Button, Rating} from "@mui/material";
+import React, {useContext, useEffect, useState, Fragment, useRef} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import {CartContext} from "../../context/CartContext";
 import {useCookies} from "react-cookie";
 import Grid from "@mui/material/Grid";
-import {useFirebaseShoppingCartCollection, useFirebaseStorage} from "../../context/FirebaseContext";
-import {fetchProductImageService} from "../../services/ProductService";
+import {
+    useFirebaseProductCollection,
+    useFirebaseShoppingCartCollection,
+    useFirebaseStorage
+} from "../../context/FirebaseContext";
+import {
+    fetchAllProductsService,
+    fetchProductImageService
+} from "../../services/ProductService";
 import {updateShoppingCartService} from "../../services/ShoppingCartService";
+import Overflow from "../../components/OverFlow";
+import _ from "lodash";
 
 export default function ProductDetail() {
     const location = useLocation();
@@ -15,16 +24,20 @@ export default function ProductDetail() {
     const userCookie = cookie['user'];
     const shoppingCartCookie = cookie['shoppingCart'];
 
-    const [data, setData] = useState(location.state);
+    const dataRef = useRef(location.state);
     const [image, setImage] = useState();
+    const [products, setProducts] = useState([]);
 
     const cartContext = useContext(CartContext);
     const shoppingCartCtx = useFirebaseShoppingCartCollection();
+    const productCtx = useFirebaseProductCollection();
     const useStorage = useFirebaseStorage();
 
     useEffect(() => {
-        fetchProductImageService(useStorage, data.imageUrl, setImage);
-    }, []);
+        fetchProductImageService(useStorage, dataRef.current.imageUrl, setImage);
+        fetchAllProductsService(productCtx, setProducts);
+        dataRef.current = location.state;
+    }, [location.pathname, image]);
 
     const handleAddProduct2Cart = () => {
         // if user not login, redirect to login page
@@ -33,7 +46,7 @@ export default function ProductDetail() {
             return;
         }
 
-        cartContext.addItemToCart(data);
+        cartContext.addItemToCart(dataRef.current);
 
         const cart = JSON.parse(localStorage.getItem('cart'));
 
@@ -48,29 +61,58 @@ export default function ProductDetail() {
     }
 
     return (
-        // <Box sx={{display: "flex", justifyContent: "start", margin: "12px"}}>
-            <Grid container >
-                <Grid item xs={12} md={3}>
-                    <Box sx={{maxHeight:"300px", maxWidth: "300px", display: "inline-block"}}>
-                        <img src={image} alt={data.productName} className="img"/>
-                    </Box>
+        <Fragment>
+            <Grid container marginTop={5} marginBottom={10}>
+                <Grid item md={2} display={{xs: "none", md: "block"}}>
+                    <Grid
+                        container
+                        direction="column"
+                        justifyContent="flex-end"
+                        alignItems="flex-end"
+                    >
+                        <Grid item>
+                            <img src={image} alt={dataRef.current.productName} width={60} height={60}
+                                 border={"1px solid black"}/>
+                        </Grid>
+
+                        <Grid item>
+                            <img src={image} alt={dataRef.current.productName} width={60} height={60}
+                                 border={"1px solid black"}/>
+                        </Grid>
+
+                        <Grid item>
+                            <img src={image} alt={dataRef.current.productName} width={60} height={60}
+                                 border={"1px solid black"}/>
+                        </Grid>
+                    </Grid>
                 </Grid>
-                <Grid item md={3}></Grid>
+
+                <Grid item xs={12} md={3} marginLeft={0}>
+                    <img src={image} alt={dataRef.current.productName}
+                         height={400} width={300}
+                         display={"inline-block"} border={"1px solid black"}/>
+                </Grid>
+
                 <Grid item xs={12} md={4}>
                     <Box sx={{textAlign: "left", paddingLeft: "12px "}}>
-                        <Box className="header" sx={{marginBottom: "12px"}}>
-                            <Typography variant="h3" component="h5">
-                                {data?.productName}
-                            </Typography>
-                        </Box>
+                        <Typography variant="h5" component="h1" sx={{marginBottom: "12px"}}>
+                            {dataRef.current?.productName}
+                        </Typography>
+                        <Rating name="half-rating-read" defaultValue={4.5} precision={0.5} readOnly/>
                         <Divider/>
+
+                        <Typography variant="h5" component="h5">
+                            <span className="label"> <b>Category</b>:</span>
+                            {dataRef.current?.category}
+                        </Typography>
+
                         {/*Price part*/}
+
                         <Box className="main" sx={{margin: "12px 0"}}>
                             <div className="body-item">
                                 {
-                                    (data.promotionStatus) ?
+                                    (dataRef.current.promotionStatus) ?
                                         <>
-                                            {/*<span className="label"><b>Price</b>: </span>*/}
                                             <Box
                                                 sx={{
                                                     backgroundColor: "#f50057",
@@ -80,54 +122,32 @@ export default function ProductDetail() {
                                                     display: "inline-block"
                                                 }}
                                             >
-                                                20% off
+                                                {
+                                                    Math.floor(dataRef.current.price - dataRef.current.promotionPrice
+                                                        / dataRef.current.price)
+                                                }% off
                                             </Box>
                                             <Typography variant="h6" sx={{display: "inline-block"}}>
-                                                ${data.promotionPrice?.split(".")[0]}
-                                                <sup>{data.promotionPrice?.split(".")[1]}</sup>
+                                                ${dataRef.current.promotionPrice?.toString().split(".")[0]}
+                                                <sup>{dataRef.current.promotionPrice?.toString().split(".")[1]}</sup>
                                             </Typography>
                                             <Typography variant="body1">
-                                                Was : <del>${data.price}</del>
+                                                Was : <del>${dataRef.current.price}</del>
                                             </Typography>
                                         </>
                                         :
                                         <Typography variant="body1">
-                                            <b>Price: </b>  ${data.price}
+                                            <b>Price: </b> ${dataRef.current.price}
                                         </Typography>
                                 }
                             </div>
-                            <Typography className="body-item">
+                            <Typography variant="h5" component="h5">
                                 <span className="label"> <b>Description</b>:</span>
-                                {data?.productDescription}
+                                {dataRef.current?.description}
                             </Typography>
-                            <Typography className="body-item">
-                                <span className="label"><b>Size</b>: </span>
-                                {"Moderate size order with regular size"}
-                            </Typography>
-                            <Typography className="body-item">
-                                <span className="label"><b>Color</b>:</span>
-                                {"Healther Navy"}
-                            </Typography>
-                            <Divider/>
+
                             {/*Basic Info*/}
                             <Box className="body-container ">
-                                <Typography variant="h5" sx={{marginBottom: "20px"}}>
-                                    Product Details
-                                </Typography>
-                                <Typography className="body-item">
-                                    <span className="label">Types of Fabric:</span>
-                                    {"100% cotton"}
-                                </Typography>
-                                <Typography className="body-item">
-                                    <span className="label">Instructions:</span>
-                                    {
-                                        "For a child to be born with this disability indicates a defect in obstetric care."
-                                    }
-                                </Typography>
-                                <Typography className="body-item">
-                                    <span className="label">Country of origin:</span>
-                                    {"China"}
-                                </Typography>
                                 <Box className="btn">
                                     <Button variant="contained" onClick={handleAddProduct2Cart}>Add to Cart</Button>
                                 </Box>
@@ -137,6 +157,22 @@ export default function ProductDetail() {
                     </Box>
                 </Grid>
             </Grid>
-        // </Box>
+
+            {/*Similar items*/}
+            <Grid item xs={12}>
+                <Overflow title={`${dataRef.current.category} items`}
+                          products={products && _.filter(products, {category: dataRef.current.category})}
+                          navigate={navigate}/>
+            </Grid>
+
+            <Grid item xs={12}>
+                <Overflow title={"Guess you like"}
+                          products={products && _.sampleSize(products, 12)}
+                          navigate={navigate}/>
+            </Grid>
+
+
+        </Fragment>
+
     );
 }
