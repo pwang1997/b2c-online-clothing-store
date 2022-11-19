@@ -1,4 +1,4 @@
-FROM node:14.17-alpine
+FROM node:lts-alpine
 WORKDIR /oauth
 COPY ["package.json", "./"]
 RUN ["yarn"]
