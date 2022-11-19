@@ -146,6 +146,7 @@ export default function SignIn() {
                         flexDirection: 'column',
                         alignItems: 'center',
                     }}
+                    marginBottom={15}
                 >
                     <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
                         <LockOutlinedIcon/>
