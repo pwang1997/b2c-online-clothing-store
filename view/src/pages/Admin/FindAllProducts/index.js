@@ -26,12 +26,12 @@ export default function FindAllProducts(props) {
                         <Fragment key={row.id}>
                             <AdminProductCard
                                 id={row.id}
-                                productName={row.product.productName}
-                                price={row.product.price}
-                                description={row.product.description}
-                                promotionStatus={row.product.promotion_status}
-                                promotionPrice={row.product.promotion_price}
-                                image={row.product?.imageUrl}
+                                productName={row.productName}
+                                price={row.price}
+                                description={row.description}
+                                promotionStatus={row.promotion_status}
+                                promotionPrice={row.promotion_price}
+                                image={row?.imageUrl}
                             />
                         </Fragment>
                     )

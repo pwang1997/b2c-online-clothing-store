@@ -1,5 +1,5 @@
 import Typography from "@mui/material/Typography";
-import { useContext, Fragment } from 'react';
+import {useContext, Fragment} from 'react';
 import EmptyCart from "./EmptyCart";
 import * as React from "react";
 import CartItem from "./CartItem"
@@ -18,79 +18,89 @@ const ShoppingCart = () => {
     const navigate = useNavigate();
 
     return (
-        <Box m={2} pt={3}>
-            <Typography variant="h5" gutterBottom>
-                Shopping Cart
-            </Typography>
-            <hr />
-            <br />
-            {cart.length > 0 ? (
-                <>
-                    <Container className='animate__animated animate__fadeIn'>
-                        {cart.map((product) => (
-                            <Fragment key={product.id}>
-                                {/*{console.log(product)}*/}
-                                <CartItem
-                                           amount={product.amount}
-                                           product={product}
-                                           increaseItemAmountToCart={increaseItemAmountToCart}
-                                           reduceItemAmountFromCart={reduceItemAmountFromCart} />
-                                <Divider variant='middle' sx={{ my: 5 }} />
-                            </Fragment>
-                        ))}
-                    </Container>
+        <Container>
 
-                    <Typography
-                        variant='h6'
-                        align='right'
-                        className='animate__animated animate__fadeInUp'
-                    >
-                        <Box m={2} pt={1}>
-                            Total: {'$' + totalCartPrice().toFixed(2)}
-                        </Box>
-                    </Typography>
-                    <Box m={2} pt={3}>
-                        <Grid
-                            container
-                            direction="row"
-                            justifyContent="space-between"
-                            alignItems="center"
+            <Box m={2} pt={3}>
+                <Divider/>
+                <Typography variant="h5" gutterBottom>
+                    Shopping Cart
+                </Typography>
+
+                <Divider/>
+
+                {cart ? (
+                    <>
+                        <Container className='animate__animated animate__fadeIn'>
+                            {Object.keys(cart?.products).map((pid) => (
+                                <Fragment key={pid}>
+                                    <CartItem
+                                        amount={cart.products[pid].amount}
+                                        product={cart.products[pid].product}
+                                        increaseItemAmountToCart={increaseItemAmountToCart}
+                                        reduceItemAmountFromCart={reduceItemAmountFromCart}/>
+                                    <Divider variant='middle' sx={{my: 5}}/>
+                                </Fragment>
+                            ))}
+                        </Container>
+
+                        <Typography
+                            variant='h6'
+                            align='right'
+                            className='animate__animated animate__fadeInUp'
                         >
-                            <Grid item>
-                                <Box display='flex' gap justifyContent={'center'} my>
-                                    <Button
-                                        variant='text'
-                                        color="success"
-                                        startIcon={<ArrowBackIosIcon />}
-                                        onClick={() => {
-                                            navigate(-1)
-                                        }}
-                                    >
-                                        Go back
-                                    </Button>
-                                </Box>
+                            <Box m={2} pt={1}>
+                                Total: {'$' + totalCartPrice().toFixed(2)}
+                            </Box>
+                        </Typography>
+                        <Box m={2} pt={3}>
+                            <Grid
+                                container
+                                direction="row"
+                                justifyContent="space-between"
+                                alignItems="center"
+                            >
+                                <Grid item>
+                                    <Box display='flex' gap justifyContent={'center'} my>
+                                        <Button
+                                            variant='text'
+                                            color="success"
+                                            startIcon={<ArrowBackIosIcon/>}
+                                            onClick={() => {
+                                                navigate(-1)
+                                            }}
+                                        >
+                                            Go back
+                                        </Button>
+                                    </Box>
+                                </Grid>
+                                <Grid item>
+                                    <Box display='flex' gap justifyContent={'center'}>
+                                        <Button
+                                            variant='contained'
+                                            color="success"
+                                            startIcon={<PointOfSaleIcon/>}
+                                            onClick={() => {
+                                                navigate("/checkout", {
+                                                    state: {
+                                                        cart: cart,
+                                                        totalCartPrice: totalCartPrice()
+                                                    }, replace: true
+                                                })
+                                            }}
+                                        >
+                                            Process to checkout
+                                        </Button>
+                                    </Box>
+                                </Grid>
                             </Grid>
-                            <Grid item>
-                                <Box display='flex' gap justifyContent={'center'} my>
-                                <Button
-                                    variant='contained'
-                                    color="success"
-                                    startIcon={<PointOfSaleIcon />}
-                                    onClick={() => {
-                                        navigate("/checkout", {state: {cartString: JSON.stringify(cart), totalCartPrice: totalCartPrice()}, replace: true})
-                                    }}
-                                >
-                                    Process to checkout
-                                </Button>
-                                </Box>
-                            </Grid>
-                        </Grid>
-                    </Box>
-                </>
-            ) : (
-                <EmptyCart />
-            )}
-        </Box>
+                        </Box>
+                    </>
+                ) : (
+                    <EmptyCart/>
+                )}
+            </Box>
+        </Container>
+
     );
 };
 

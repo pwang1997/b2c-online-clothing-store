@@ -1,61 +1,28 @@
-import Button from '@mui/material/Button';
-import Grid from "@mui/material/Grid";
+import {FormHelperText, Grid} from "@mui/material";
 import Typography from "@mui/material/Typography";
-import {ButtonGroup, FormHelperText} from "@mui/material";
 import Box from "@mui/material/Box";
 import React, {Fragment, useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
+import {useFirebaseStorage} from "../../context/FirebaseContext";
 import {fetchProductImageService} from "../../services/ProductService";
-import {useFirebaseShoppingCartCollection, useFirebaseStorage} from "../../context/FirebaseContext";
-import {updateShoppingCartService} from "../../services/ShoppingCartService";
-import {useCookies} from "react-cookie";
+import {useNavigate} from "react-router-dom";
+import Divider from "@mui/material/Divider";
 
-const CartItem = (props) => {
-    const {product, amount, reduceItemAmountFromCart, increaseItemAmountToCart} = props;
+const OrderDetailCard = (props) => {
+
     const navigate = useNavigate();
-
+    const {pid, orderedProduct} = props;
+    const {product, amount} = orderedProduct;
+    const productCtx = useFirebaseStorage();
     const [image, setImage] = useState();
-    const useStorage = useFirebaseStorage();
-    const shoppingCartCtx = useFirebaseShoppingCartCollection();
-
-    const [cookie, setCookie] = useCookies(['shoppingCart']);
-    const shoppingCartCookie = cookie['shoppingCart'];
 
     useEffect(() => {
-        console.log(product);
-        fetchProductImageService(useStorage, product.imageUrl, setImage);
+        fetchProductImageService(productCtx, product.imageUrl, setImage);
     }, []);
 
-    const onIncrementProduct2Cart = (pid) => {
-        increaseItemAmountToCart(pid);
-        updateShoppingCartService(shoppingCartCtx,
-            shoppingCartCookie.cartId,
-            JSON.parse(localStorage.getItem('cart')))
-            .then((res) => {
-                console.log("Cloud cart updated");
-            })
-            .catch((err) => {
-                console.error(err);
-            });
-    }
-
-    const onDecrementProduct2Cart = (pid) => {
-        reduceItemAmountFromCart(pid);
-        updateShoppingCartService(shoppingCartCtx,
-            shoppingCartCookie.cartId,
-            JSON.parse(localStorage.getItem('cart')))
-            .then((res) => {
-                console.log("Cloud cart updated");
-            })
-            .catch((err) => {
-                console.error(err);
-            });
-    }
-
     return (
-        <Fragment>
-            <Typography variant='inherit'>{product.productName}</Typography>
-            <Grid container spacing={2}>
+        <React.Fragment>
+            <Typography variant='inherit' >{product.productName}</Typography>
+            <Grid container m={2}>
                 <Grid
                     item
                     xs={12}
@@ -65,11 +32,16 @@ const CartItem = (props) => {
                     justifyContent='center'
                     alignContent='center'
                 >
-                    <img src={image} height='150' width='150' alt={product.productName} onClick={
-                        () => {
-                            navigate(`/product/${product.id}`, {state: product, replace: true});
-                        }
-                    }/>
+                    <img src={image} height='150' width='150'
+                         alt={product.productName}
+                         onClick={
+                             () => {
+                                 navigate(`/product/${pid}`, {
+                                     state: product,
+                                     replace: true
+                                 });
+                             }
+                         }/>
                 </Grid>
 
                 <Grid
@@ -112,25 +84,9 @@ const CartItem = (props) => {
                     alignContent='center'
                 >
                     <FormHelperText> Qty </FormHelperText>
-                    <ButtonGroup variant="text" aria-label="text button group">
-                        <Button
-                            size="small"
-                            variant="outlined"
-                            onClick={() => onDecrementProduct2Cart(product.id)}
-                        >
-                            -
-                        </Button>
-                        <Box component="span" marginLeft={1} marginRight={1}>
+                    <Box component="span" marginLeft={1} marginRight={1}>
                             {amount}
                         </Box>
-                        <Button
-                            size="small"
-                            variant="outlined"
-                            onClick={() => onIncrementProduct2Cart(product.id)}
-                        >
-                            +
-                        </Button>
-                    </ButtonGroup>
                 </Grid>
 
                 <Grid
@@ -161,8 +117,9 @@ const CartItem = (props) => {
                     }
                 </Grid>
             </Grid>
-        </Fragment>
-    );
-};
+            <Divider />
+        </React.Fragment>
+    )
+}
 
-export default CartItem;
+export default OrderDetailCard;

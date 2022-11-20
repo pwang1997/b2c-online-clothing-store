@@ -6,7 +6,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import {PayPalButtons} from "@paypal/react-paypal-js";
-import {useContext, useState} from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import axios from "axios";
 import {useLocation, useNavigate} from "react-router-dom";
 import Paper from "@mui/material/Paper";
@@ -17,14 +17,30 @@ import Divider from "@mui/material/Divider";
 import Box from "@mui/material/Box";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import {CartContext} from "../../context/CartContext";
+import {submitOrderService} from "../../services/OrderService";
+import {useFirebaseOrderCollectionContext, useFirebaseShoppingCartCollection} from "../../context/FirebaseContext";
+import {updateShoppingCartService} from "../../services/ShoppingCartService";
+import {useCookies} from "react-cookie";
 
 const Checkout = () => {
     const { state } = useLocation();
-    const { cartString, totalCartPrice } = state;
-    const cart = JSON.parse(cartString)
+    const { cart, totalCartPrice } = state;
 
     const [paidFor, setPaidFor] = useState(false);
     const [error, setError] = useState(null);
+    const orderCtx = useFirebaseOrderCollectionContext();
+    const shoppingCartCtx = useFirebaseShoppingCartCollection();
+    const [cookies, setCookie] = useCookies(['shoppingCart']);
+    const shoppingCartCookie = cookies['shoppingCart'];
+
+    const shippingInfoRef = useRef({
+        firstName : "",
+        lastName : "",
+        addressLine1 : "",
+        addressLine2 : "",
+        city : "",
+        province : ""
+    });
 
     const {resetCart} = useContext(CartContext)
 
@@ -38,10 +54,22 @@ const Checkout = () => {
         color: theme.palette.text.secondary,
     }));
 
-    const handleApprove = (orderId) => {
+    const handleApprove = (orderSummary) => {
         setPaidFor(true);
-        resetCart()
-        navigate('/checkoutSuccess', {state: {orderId: orderId}, replace: true});
+
+        const submitOrder = submitOrderService(orderCtx, orderSummary);
+        const resetShoppingCart = updateShoppingCartService(shoppingCartCtx,
+            shoppingCartCookie.cartId,
+            { uid: cart.uid, products: {}});
+
+        axios.all([submitOrder, resetShoppingCart])
+            .then(() => {
+                resetCart();
+                navigate('/checkoutSuccess', {state: {orderSummary : orderSummary}, replace: true});
+            })
+            .catch((err) => {
+                console.error(err);
+            })
     }
 
     return (
@@ -69,14 +97,14 @@ const Checkout = () => {
                                 Order summary
                             </Typography>
                             <List disablePadding>
-                                {cart.map((product) => (
-                                    <ListItem key={product.id} sx={{ py: 1, px: 0 }}>
+                                {Object.keys(cart.products).map((pid) => (
+                                    <ListItem key={pid} sx={{ py: 1, px: 0 }}>
                                         <ListItemText
-                                            primary={product.productName}
-                                            secondary={'x'+product.amount}
+                                            primary={cart.products[pid].product.productName}
+                                            secondary={'x'+cart.products[pid].amount}
                                         />
                                         <Typography variant="body2">
-                                            ${product.price}
+                                            ${cart.products[pid].product.price}
                                         </Typography>
                                     </ListItem>
                                 ))}
@@ -108,6 +136,7 @@ const Checkout = () => {
                                             fullWidth
                                             autoComplete="given-name"
                                             variant="standard"
+                                            onChange={(e) => shippingInfoRef.current.firstName = e.target.value}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
@@ -119,6 +148,7 @@ const Checkout = () => {
                                             fullWidth
                                             autoComplete="family-name"
                                             variant="standard"
+                                            onChange={(e) => shippingInfoRef.current.lastName = e.target.value}
                                         />
                                     </Grid>
                                     <Grid item xs={12}>
@@ -130,6 +160,7 @@ const Checkout = () => {
                                             fullWidth
                                             autoComplete="shipping address-line1"
                                             variant="standard"
+                                            onChange={(e) => shippingInfoRef.current.addressLine1 = e.target.value}
                                         />
                                     </Grid>
                                     <Grid item xs={12}>
@@ -140,6 +171,7 @@ const Checkout = () => {
                                             fullWidth
                                             autoComplete="shipping address-line2"
                                             variant="standard"
+                                            onChange={(e) => shippingInfoRef.current.addressLine2 = e.target.value}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
@@ -151,6 +183,7 @@ const Checkout = () => {
                                             fullWidth
                                             autoComplete="shipping address-level2"
                                             variant="standard"
+                                            onChange={(e) => shippingInfoRef.current.city = e.target.value}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
@@ -160,6 +193,7 @@ const Checkout = () => {
                                             label="State/Province/Region"
                                             fullWidth
                                             variant="standard"
+                                            onChange={(e) => shippingInfoRef.current.province = e.target.value}
                                         />
                                     </Grid>
                                 </Grid>
@@ -184,12 +218,20 @@ const Checkout = () => {
                                     }}
                                     onApprove={async (data, actions) => {
                                         const order = await actions.order.capture();
-                                        console.log("Paypal Order:", order);
-                                        handleApprove(data.orderID);
+                                        const orderSummary = {
+                                            orderID : order.id,
+                                            paidAt : Date.now(),
+                                            status : order.status,
+                                            purchaseUnits : order.purchase_units[0],
+                                            shippingAddress : shippingInfoRef.current,
+                                            products : cart.products,
+                                            uid : cart.uid
+                                        }
+                                        handleApprove(orderSummary);
                                         await axios.post("http://localhost:5000/checkout", {
                                             orderId: data.orderID
                                         }).then((res) => {
-                                            console.log(res.data)
+                                            console.log(res.data);
                                         }).catch((error) => {
                                             console.log(error)
                                         })

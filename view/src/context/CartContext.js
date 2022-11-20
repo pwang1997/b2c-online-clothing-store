@@ -4,71 +4,66 @@ export const CartContext = createContext()
 
 export const CartProvider = ({ children }) => {
     const [cart, setCart] = useState(
-        JSON.parse(localStorage.getItem('cart')) || []
+        JSON.parse(localStorage.getItem('cart')) || null
     );
-
+    const updateCart = (newCart) => {
+        setCart(newCart);
+        localStorage.setItem('cart', JSON.stringify(newCart));
+    }
     //cart methods
-    const addItemToCart = (item) => {
-        const existItem = cart.find(el => el.id === item.id);
+    const addItemToCart = (product) => {
+        let newCart = structuredClone(cart);
 
-        if(existItem) {
-            existItem.amount+=1;
-            setCart([...cart]);
-            localStorage.setItem('cart', JSON.stringify([...cart]));
+        if(newCart?.products[product.id]) {
+            newCart.products[product.id].amount+=1;
         } else {
-            item.amount = 1;
-            setCart([...cart, item]);
-            localStorage.setItem('cart', JSON.stringify([...cart, item]));
+            newCart.products[product.id] = {
+                amount : 1,
+                product : product
+            };
         }
+        updateCart(newCart);
     };
 
     const removeItemFromCart = (id) => {
-        setCart(cart.filter((cartItem) => cartItem.id !== id));
-        localStorage.setItem(
-            'cart',
-            JSON.stringify(cart.filter((cartItem) => cartItem.id !== id))
-        );
+        const newCart = structuredClone(cart);
+        if(newCart.products[id].amount === 1) {
+            delete newCart.products[id];
+        } else {
+            newCart.products[id].amount--;
+        }
+        updateCart(newCart);
     };
 
-    const isInCart = (id) => cart.some((cartItem) => cartItem.id === id);
+    const isInCart = (id) => cart.products[id];
 
-    const amountOfItemsInCart = () => cart.reduce((acc, item) => (acc += item.amount), 0);
+    const amountOfItemsInCart = () => cart && Object.keys(cart?.products).reduce((acc, pid) => (acc += cart?.products[pid]?.amount), 0);
 
-    const amountOfItems = (id) => cart.filter((cartItem) => cartItem.id === id)[0].amount
+    const amountOfItems = (id) => cart?.products[id].amount;
 
-    const totalCartPrice = () =>
-        cart.reduce((acc, item) => (acc += item.price * item.amount), 0);
+    const totalCartPrice = () => cart ? Object.keys(cart.products).reduce((acc, pid) => {
+        const productItem = cart.products[pid];
+        const price = (productItem.product.promotionStatus) ?
+            productItem.product.promotionPrice :
+            productItem.product.price;
+        acc += productItem.amount * price;
+        return acc;
+    },0) : 0;
 
-    const resetCart = () => {
-        setCart([]);
-        localStorage.setItem('cart', JSON.stringify([]));
-    };
+    const resetCart = () => updateCart({uid: cart.uid, products: {}});
 
     const increaseItemAmountToCart = (id) => {
-        const cartItems = JSON.parse(localStorage.getItem('cart'))
+        const newCart = JSON.parse(localStorage.getItem('cart'));
         // const cartItem = cartItems.filter((cartItem) => cartItem.id === id.toString())
-        let query = cartItems.map(item => {
-            if (item.id === id){
-                item.amount = item.amount+1
-            }
-            return item;
-        })
-        localStorage.setItem('cart', JSON.stringify(query));
-        setCart(JSON.parse(localStorage.getItem('cart')));
+        newCart.products[id].amount++;
+        updateCart(newCart);
     };
 
     const reduceItemAmountFromCart = (id) => {
         if(amountOfItems(id) > 1){
-            const cartItems = JSON.parse(localStorage.getItem('cart'))
-            let query = cartItems.map(item => {
-                console.log(item);
-                if (item.id === id){
-                    item.amount = item.amount-1
-                }
-                return item;
-            })
-            localStorage.setItem('cart', JSON.stringify(query));
-            setCart(JSON.parse(localStorage.getItem('cart')));
+            const newCart = JSON.parse(localStorage.getItem('cart'));
+            newCart.products[id].amount--;
+            updateCart(newCart);
         }else{
             removeItemFromCart(id)
         }
