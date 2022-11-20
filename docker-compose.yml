@@ -36,3 +36,11 @@ services:
       - /payment/node_modules
     ports:
       - "3002:5000"
+
+  redis:
+    container_name: redis-server
+    build:
+      context: ./redis-server
+      dockerfile: Dockerfile
+    ports:
+      - "3003:3003"
