@@ -5,44 +5,15 @@ import {useNavigate} from "react-router-dom";
 
 import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
-import {autumnList, springList, summerList, winterList} from "../../../mock/product";
 
 export default function SearchBar() {
 
     const searchQuery = useRef("");
     const navigate = useNavigate();
 
-    const mockData = [
-        ...springList,
-        ...summerList,
-        ...winterList,
-        ...autumnList,
-    ];
-
-    const promotedProducts = mockData.reduce((products, product) => {
-        if(product.id % 2 === 0) {
-            product.promotionStatus = true;
-            products.push(product);
-        }
-        return products;
-    }, []);
-
     const searchProduct = () => {
         let query = searchQuery.current.value;
-
-        if ((!query) || (typeof query && query.trim().length === 0)) {
-            navigate('/');
-        } else if (query === "feature") {
-            navigate("/products", {state: promotedProducts, replace: true });
-        } else if(query === "spring") {
-            navigate('/products', {state: [...springList], replace: true})
-        } else if(query === "summer") {
-            navigate('/products', {state: [...summerList], replace: true})
-        } else if(query === "autumn" || query === "fall") {
-            navigate('/products', {state: [...autumnList], replace: true})
-        } else if(query === "winter") {
-            navigate('/products', {state: [...winterList], replace: true})
-        }
+        navigate("/products", {state: {query: query}, replace: true});
         searchQuery.current.value = "";
     }
 

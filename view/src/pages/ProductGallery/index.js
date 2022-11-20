@@ -2,7 +2,11 @@ import React, {useEffect, useState, Fragment} from "react";
 import {Grid} from "@mui/material";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import {useLocation} from "react-router-dom";
-import {fetchFeaturedProductsService, fetchProductsByCategoryService} from "../../services/ProductService";
+import {
+    fetchFeaturedProductsService,
+    fetchProductsByCategoryService,
+    fetchProductsByProductNameService
+} from "../../services/ProductService";
 import {useFirebaseProductCollection} from "../../context/FirebaseContext";
 
 export default function ProductGallery() {
@@ -18,6 +22,8 @@ export default function ProductGallery() {
         } else if(location.state?.promotionStatus) {
             fetchFeaturedProductsService(productContext, setProducts);
             console.log(products);
+        } else if(location.state?.query) {
+            fetchProductsByProductNameService(productContext, location.state.query, setProducts);
         }
     }, [location.state]);
 

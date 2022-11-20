@@ -2,75 +2,41 @@ import {
     addProduct,
     updateProduct,
     deleteProduct,
-    fetchAllProducts,
-    fetchProductByProductName,
-    fetchProductsByCategory,
     addProductImage, fetchProductImage, fetchFeaturedProducts
 } from "../apis/Products";
+import axios from "axios";
+
+const fetchProductsWithConditionService = (ctx, params, setProducts) => {
+    return axios.get("http://localhost:4000/products/fetch/?", {params})
+        .then((res) => {
+            setProducts(res.data);
+        });
+}
 
 export const fetchProductsByCategoryService = (firebaseContext, categoryName, setProducts) => {
-    let results = [];
-    if (!firebaseContext || !categoryName) {
-        setProducts(results);
-        return;
+    const params = {
+        fieldPath: "category",
+        opStr: "==",
+        value: categoryName
     }
-
-    fetchProductsByCategory(firebaseContext, categoryName).then((res) => {
-        res.docs.forEach((doc) => {
-            const data = {
-                id: doc.id,
-                ...doc.data()
-            }
-            results.push(data);
-        })
-    }).catch((err) => {
-        console.error(err);
-    }).finally(() => {
-        setProducts(results);
-    });
+    fetchProductsWithConditionService(firebaseContext, params, setProducts);
 }
 
 export const fetchAllProductsService = (firebaseContext, setProducts) => {
-    let results = [];
-    if (!firebaseContext) {
-        setProducts(results);
-    }
 
-    fetchAllProducts(firebaseContext).then((res) => {
-        res.docs.forEach((doc) => {
-            const data = {
-                id: doc.id,
-                ...doc.data()
-            }
-            results.push(data); 
-        })
-    }).catch((err) => {
-        console.error(err);
-    }).finally(() => {
-        console.log(results);
-        setProducts(results);
-    });
+    axios.get("http://localhost:4000/products/fetch/find-all")
+        .then((res) => {
+            setProducts(res.data);
+        });
 }
 
 export const fetchProductsByProductNameService = (firebaseContext, productName, setProducts) => {
-    let results = [];
-    if (!firebaseContext) {
-        return results;
+    const params = {
+        fieldPath : "productName",
+        opStr: ">=",
+        value : productName
     }
-
-    fetchProductByProductName(firebaseContext, productName).then((res) => {
-        res.docs.forEach((doc) => {
-            const data = {
-                id: doc.id,
-                product: doc.data()
-            }
-            results.push(data);
-        })
-    }).catch((err) => {
-        console.error(err);
-    }).finally(() => {
-        setProducts(results);
-    });
+    fetchProductsWithConditionService(firebaseContext, params, setProducts);
 }
 
 export const addProductService = (firebaseContexts, product, productImage) => {
@@ -114,13 +80,47 @@ export const deleteProductService = (firebaseContext) => {
 }
 
 export const fetchProductImageService = (firebaseContext, imageName, setImageURL) => {
-    fetchProductImage(firebaseContext, imageName)
+
+    const params = {
+        url: imageName.split("/")[1]
+    }
+
+    const fetchImageUrlFromRedis = () => {
+        return axios.get(`http://localhost:4000/products/image/get/`, {params})
+            .then((res) => {
+                console.log("Return from redis");
+                return res.data;
+            });
+    }
+
+    const fetchImageUrlFromFirebase = () => {
+        return fetchProductImage(firebaseContext, imageName)
+            .then((res) => {
+                console.log("Return from firebase");
+                return res;
+            });
+    }
+
+    const setImageUrl2Redis = async (res) => {
+        return await axios.post(`http://localhost:4000/products/image/set/`, {downloadUrl: res})
+            .then((res) => {
+                console.log(res);
+                return res;
+            })
+    }
+
+    fetchImageUrlFromRedis()
         .then((res) => {
-            setImageURL(res);
+            if (!res) {
+                fetchImageUrlFromFirebase()
+                    .then((res) => {
+                        setImageUrl2Redis(res);
+                        setImageURL(res)
+                    });
+            } else {
+                setImageURL(res);
+            }
         })
-        .catch((err) => {
-            console.error(err);
-        });
 }
 
 export const fetchFeaturedProductsService = (firebaseContext, setProducts) => {
