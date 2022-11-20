@@ -23,10 +23,10 @@ export const MenuItemSignUp = (props) => {
 export const MenuItemOrderHistory = (props) => {
     const {handleMenuClose, navigate} = props;
 
-    return (<MenuItem component={Link} to="/history" onClick={() => {
+    return (<MenuItem component={Link} to="/order-history" onClick={() => {
             handleMenuClose();
         }}>
-            <HistoryIcon onClick={() => navigate("/history")}/>
+            <HistoryIcon onClick={() => navigate("/order-history")}/>
             Order History</MenuItem>)
 }
 
