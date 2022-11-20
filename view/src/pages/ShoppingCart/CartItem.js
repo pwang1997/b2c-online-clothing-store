@@ -3,7 +3,7 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import {ButtonGroup, FormHelperText} from "@mui/material";
 import Box from "@mui/material/Box";
-import {Fragment, useEffect, useState} from "react";
+import React, {Fragment, useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {fetchProductImageService} from "../../services/ProductService";
 import {useFirebaseShoppingCartCollection, useFirebaseStorage} from "../../context/FirebaseContext";
@@ -14,7 +14,7 @@ const CartItem = (props) => {
     const {product, amount, reduceItemAmountFromCart, increaseItemAmountToCart} = props;
     const navigate = useNavigate();
 
-    const [image,setImage] = useState();
+    const [image, setImage] = useState();
     const useStorage = useFirebaseStorage();
     const shoppingCartCtx = useFirebaseShoppingCartCollection();
 
@@ -54,6 +54,7 @@ const CartItem = (props) => {
 
     return (
         <Fragment>
+            <Typography variant='inherit'>{product.productName}</Typography>
             <Grid container spacing={2}>
                 <Grid
                     item
@@ -74,20 +75,8 @@ const CartItem = (props) => {
                 <Grid
                     item
                     xs={12}
-                    md={2}
-                    display='grid'
-                    textAlign='center'
-                    justifyContent='center'
-                    alignContent='center'
-                >
-                    <Typography variant='inherit'>{product.productName}</Typography>
-                </Grid>
-
-                <Grid
-                    item
-                    xs={12}
                     sm={3}
-                    md={2}
+                    md={4}
                     display='grid'
                     textAlign='center'
                     justifyContent='center'
@@ -95,7 +84,20 @@ const CartItem = (props) => {
                 >
                     <Box>
                         <FormHelperText> Price </FormHelperText>
-                        <Typography variant='inherit'>{'$' + product.price}</Typography>
+                        {
+                            product.promotionStatus ?
+                                <Fragment>
+                                    <Typography variant="inherit">
+                                        <del>${product?.price}</del>
+                                    </Typography>
+                                    <Typography variant={"inherit"}>
+                                        ${product?.promotionPrice?.toString().split(".")[0]}
+                                        <sup>{product?.promotionPrice?.toString().split(".")[1]}</sup>
+                                    </Typography>
+                                </Fragment>
+                                :
+                                <Typography variant='inherit'>{'$' + product.price}</Typography>
+                        }
                     </Box>
                 </Grid>
 
@@ -109,7 +111,7 @@ const CartItem = (props) => {
                     justifyContent='center'
                     alignContent='center'
                 >
-                    <FormHelperText> Quality </FormHelperText>
+                    <FormHelperText> Qty </FormHelperText>
                     <ButtonGroup variant="text" aria-label="text button group">
                         <Button
                             size="small"
@@ -118,7 +120,7 @@ const CartItem = (props) => {
                         >
                             -
                         </Button>
-                        <Box component="span">
+                        <Box component="span" marginLeft={1} marginRight={1}>
                             {amount}
                         </Box>
                         <Button
@@ -129,23 +131,34 @@ const CartItem = (props) => {
                             +
                         </Button>
                     </ButtonGroup>
-
                 </Grid>
 
                 <Grid
                     item
                     xs={12}
                     sm={3}
-                    md={2}
+                    md={4}
                     display='grid'
                     textAlign='center'
                     justifyContent='center'
                     alignContent='center'
                 >
                     <FormHelperText> Total </FormHelperText>
-                    <Typography variant='inherit'>
-                        {'$' + (product.price * amount).toFixed(2)}
-                    </Typography>
+                    {
+                        product.promotionStatus ?
+                            <Fragment>
+                                <Typography variant='inherit'>
+                                    <del>${(amount * product.price).toFixed(2)}</del>
+                                </Typography>
+                                <Typography variant='inherit'>
+                                    ${(amount * product.promotionPrice).toFixed(2)}
+                                </Typography>
+                            </Fragment>
+                            :
+                            <Typography variant='inherit'>
+                                ${(amount * product.price).toFixed(2)}
+                            </Typography>
+                    }
                 </Grid>
             </Grid>
         </Fragment>
