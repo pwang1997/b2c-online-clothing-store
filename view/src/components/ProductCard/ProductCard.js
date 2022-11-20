@@ -59,7 +59,7 @@ export default function ProductCard(props) {
     }
 
     return (
-        <Card variant="outlined" sx={{width: 280}}>
+        <Card variant="outlined" sx={{width: 400}}>
             <CardContent>
                 <CardMedia
                     component={"img"}
@@ -81,8 +81,10 @@ export default function ProductCard(props) {
                     }}
                     color="text.secondary"
                     gutterBottom
+                    overflow={"hidden"}
+                    textOverflow={"ellipsis"}
                 >
-                    {product?.productDescription}
+                    {product?.description}
                 </Typography>
 
                 {
@@ -105,14 +107,15 @@ export default function ProductCard(props) {
                                     lineHeight: "28px",
                                 }}
                             >
-                                20% off
+                                {
+                                    Math.floor(product.price - product.promotionPrice
+                                        / product.price)
+                                }% off
                             </Box>
                             <Typography variant="body1">
-                                ${product?.promotionPrice?.split(".")[0]}
-                                <sup>{product?.promotionPrice?.split(".")[1]}</sup>
-                            </Typography>
-                            <Typography variant="body1">
-                                Was : <del>${product?.price}</del>
+                                <del>${product?.price}</del>
+                                ${product?.promotionPrice?.toString().split(".")[0]}
+                                <sup>{product?.promotionPrice?.toString().split(".")[1]}</sup>
                             </Typography>
                         </Box> :
                         <Typography variant="body1">

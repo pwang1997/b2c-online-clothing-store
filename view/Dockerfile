@@ -12,7 +12,7 @@
 # docker rm react-app -f                                                   delete docker container
 
 
-FROM node:14.17-alpine as react_build 
+FROM node:lts-alpine as react_build
 #also say 
 WORKDIR /app
 #copy the react app to the container

@@ -108,6 +108,7 @@ export default function SignUp() {
                         flexDirection: 'column',
                         alignItems: 'center',
                     }}
+                    marginBottom={6}
                 >
                     <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
                         <LockOutlinedIcon/>

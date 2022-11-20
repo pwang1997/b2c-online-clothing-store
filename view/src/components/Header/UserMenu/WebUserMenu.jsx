@@ -90,9 +90,8 @@ export default function WebUserMenu(props) {
                 onClose={handleMenuClose}
             >
                 {
-                    (!userCookie)
-                        ? <MenuItemSignIn handleMenuClose={handleMenuClose} navigate={navigate}/>
-                        : <MenuItemProfile handleMenuClose={handleMenuClose} navigate={navigate}/>
+                    (!userCookie) &&
+                        <MenuItemSignIn handleMenuClose={handleMenuClose} navigate={navigate}/>
                 }
 
                 {
