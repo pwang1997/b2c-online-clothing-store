@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
 
 services:
 
@@ -15,16 +15,16 @@ services:
       - "3000:80"
     # command: yarn start --network-timeout 1000000
 
-  oauth:
-    container_name: oauth-service
-    build:
-      context: ./oauth
-      dockerfile: Dockerfile
-    volumes:
-      - ./oauth:/oauth
-      - /oauth/node_modules
-    ports:
-      - "3001:3001"
+  # oauth:
+  #   container_name: oauth-service
+  #   build:
+  #     context: ./oauth
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - ./oauth:/oauth
+  #     - /oauth/node_modules
+  #   ports:
+  #     - "3001:3001"
 
   payment:
     container_name: payment-service
@@ -37,10 +37,11 @@ services:
     ports:
       - "3002:5000"
 
-  redis:
+  redis-server:
     container_name: redis-server
+    restart: unless-stopped
     build:
       context: ./redis-server
       dockerfile: Dockerfile
     ports:
-      - "3003:3003"
+      - "4000:4000"
