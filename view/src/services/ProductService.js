@@ -5,7 +5,7 @@ import {
     fetchAllProducts,
     fetchProductByProductName,
     fetchProductsByCategory,
-    addProductImage, fetchProductImage
+    addProductImage, fetchProductImage, fetchFeaturedProducts
 } from "../apis/Products";
 
 export const fetchProductsByCategoryService = (firebaseContext, categoryName, setProducts) => {
@@ -121,4 +121,22 @@ export const fetchProductImageService = (firebaseContext, imageName, setImageURL
         .catch((err) => {
             console.error(err);
         });
+}
+
+export const fetchFeaturedProductsService = (firebaseContext, setProducts) => {
+    let results = [];
+    fetchFeaturedProducts(firebaseContext)
+        .then((res) => {
+            res.docs.forEach((doc) => {
+                const data = {
+                    id: doc.id,
+                    ...doc.data()
+                }
+                results.push(data);
+            })
+        })
+        .catch(console.error)
+        .finally(() => {
+            setProducts(results);
+        })
 }

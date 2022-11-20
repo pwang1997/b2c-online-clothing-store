@@ -28,9 +28,14 @@ export const fetchAllProducts = async (firebaseContext) => {
 }
 
 
-export const fetchTrendingProducts = async (firebaseContext) => { }
+export const fetchFeaturedProducts = async (firebaseContext) => {
+    const q = query(
+        firebaseContext,
+        where("promotionStatus", "==", true)
+    );
 
-export const fetchNewReleaseProducts = async (firebaseContext) => { }
+    return await getDocs(q);
+}
 
 
 export const addProduct = async(firebaseContext, product) => {
@@ -53,4 +58,7 @@ export const addProductImage = async(firebaseContext, productImage) => {
 export const fetchProductImage = async(firebaseContext, imageName) => {
     const storageRef = ref(firebaseContext, imageName);
     return await getDownloadURL(storageRef)
+}
+
+export class fetchTrendingProducts {
 }
