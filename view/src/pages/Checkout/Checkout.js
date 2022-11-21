@@ -32,6 +32,8 @@ const Checkout = () => {
     const shoppingCartCtx = useFirebaseShoppingCartCollection();
     const [cookies, setCookie] = useCookies(['shoppingCart']);
     const shoppingCartCookie = cookies['shoppingCart'];
+    const LOCALHOST = '54.91.161.219';
+    const PAYMENT_PORT = process.env.PAYMENT_PORT || 5000;
 
     const shippingInfoRef = useRef({
         firstName : "",
@@ -228,7 +230,7 @@ const Checkout = () => {
                                             uid : cart.uid
                                         }
                                         handleApprove(orderSummary);
-                                        await axios.post("http://localhost:5000/checkout", {
+                                        await axios.post(`http://${LOCALHOST}:${PAYMENT_PORT}/checkout`, {
                                             orderId: data.orderID
                                         }).then((res) => {
                                             console.log(res.data);
