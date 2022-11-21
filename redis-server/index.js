@@ -5,7 +5,7 @@ const app = express();
 const dotenv = require('dotenv');
 
 // routers
-const ProductRoutes = require("./routes/ProductRoutes");
+const ProductRoutes = require("./src/routes/ProductRoutes");
 
 dotenv.config()
 
@@ -20,5 +20,6 @@ app.use(bodyParser.json());
 // routers
 app.use("/products", ProductRoutes);
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 4000;
+
 app.listen(PORT, () => console.log(`Redis Server Listening at ${PORT}`));
