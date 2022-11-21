@@ -6,8 +6,11 @@ import {
 } from "../apis/Products";
 import axios from "axios";
 
+const redis_service_host = 'localhost';
+const redis_service_port = 4000;
+
 const fetchProductsWithConditionService = (ctx, params, setProducts) => {
-    return axios.get("http://localhost:4000/products/fetch/?", {params})
+    return axios.get(`http://${redis_service_host}:${redis_service_port}/products/fetch/?`, {params})
         .then((res) => {
             setProducts(res.data);
         });
@@ -24,7 +27,7 @@ export const fetchProductsByCategoryService = (firebaseContext, categoryName, se
 
 export const fetchAllProductsService = (firebaseContext, setProducts) => {
 
-    axios.get("http://localhost:4000/products/fetch/find-all")
+    axios.get(`http://${redis_service_host}:${redis_service_port}/products/fetch/find-all`)
         .then((res) => {
             setProducts(res.data);
         });
@@ -86,7 +89,7 @@ export const fetchProductImageService = (firebaseContext, imageName, setImageURL
     }
 
     const fetchImageUrlFromRedis = () => {
-        return axios.get(`http://localhost:4000/products/image/get/`, {params})
+        return axios.get(`http://${redis_service_host}:${redis_service_port}/products/image/get/`, {params})
             .then((res) => {
                 console.log("Return from redis");
                 return res.data;
@@ -102,7 +105,7 @@ export const fetchProductImageService = (firebaseContext, imageName, setImageURL
     }
 
     const setImageUrl2Redis = async (res) => {
-        return await axios.post(`http://localhost:4000/products/image/set/`, {downloadUrl: res})
+        return await axios.post(`http://${redis_service_host}:${redis_service_port}/products/image/set/`, {downloadUrl: res})
             .then((res) => {
                 console.log(res);
                 return res;
